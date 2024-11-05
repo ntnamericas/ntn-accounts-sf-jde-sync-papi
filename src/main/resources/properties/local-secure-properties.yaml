@@ -1,2 +1,8 @@
-client-id: ""
-client-secret: ""
+#bpp-db-sys-api client details
+ntn:
+  db:
+    clientSecret: "![]"
+
+#bpp-sfdc-sys-api client details
+ntn-sfdc:
+  clientSecret: "![]"  

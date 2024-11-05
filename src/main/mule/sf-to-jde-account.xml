@@ -81,22 +81,44 @@ skipNullOn="everywhere"
 }]]]></email:content>
 					</email:body>
 				</email:send>
- -->				<logger level="INFO" doc:name="action to notify the NTN team " doc:id="7f326a2e-02bc-40a7-b770-9c98a13c1940" />
+ -->
+				<ee:transform doc:name="Transform Message" doc:id="0470b45d-a12b-4c2d-b8aa-200085959691" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/xml
+ns soapenv http://schemas.xmlsoap.org/soap/envelope/
+ns sforce http://soap.sforce.com/2005/09/outbound
+
+
+---
+{
+  'soapenv:Envelope' @('xmlns:soapenv': "http://schemas.xmlsoap.org/soap/envelope/"): {
+    'soapenv:Body': {
+      'notificationsResponse' @('xmlns': "http://soap.sforce.com/2005/09/outbound"): {
+        Ack: "false"
+      }
+    }
+  }
+}
+]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<logger level="INFO" doc:name="action to notify the NTN team " doc:id="7f326a2e-02bc-40a7-b770-9c98a13c1940" message='"alphaName value is greater than 40"' />
 			</when>
 			<otherwise >
 				<http:request method="POST" doc:name="Request to update JDE table on ntn-jde-sync-sapi" doc:id="40b251e7-1f7c-4823-8a6e-025785d48a57" config-ref="HTTP_Request_configuration1" path="/api/accounts">
 					<reconnect frequency="${max.frequency}" count="${max.retries}" />
 				</http:request>
-			</otherwise>
-		</choice>
-		<ee:transform doc:name="Transform Message" doc:id="963cb62f-c72b-4264-8e5f-464e78ea2818" >
-			<ee:message >
-				<ee:set-payload ><![CDATA[%dw 2.0
+				<ee:transform doc:name="Transform Message" doc:id="963cb62f-c72b-4264-8e5f-464e78ea2818">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
 output application/xml
 ---
 payload]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
-		<logger level="INFO" doc:name="Logger" doc:id="44b6e28a-2df5-4138-86b7-44094dd9300e" message="#[payload]"/>
+				<logger level="INFO" doc:name="Logger" doc:id="44b6e28a-2df5-4138-86b7-44094dd9300e" message="#[payload]" />
+			</otherwise>
+		</choice>
 	</flow>
 </mule>
