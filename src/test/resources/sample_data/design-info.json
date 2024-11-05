@@ -1,0 +1,8 @@
+{
+  "sampleData": {
+    "022f7208-cefa-4100-b595-d009129d4623": {
+      "payload": "sample_data/json_1.json",
+      "attributes": "sample_data/json.json"
+    }
+  }
+}

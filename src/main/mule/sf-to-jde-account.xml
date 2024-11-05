@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:email="http://www.mulesoft.org/schema/mule/email" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/email http://www.mulesoft.org/schema/mule/email/current/mule-email.xsd">
+	<flow name="sf-to-jdeFlow" doc:id="6fc99a58-e2d7-409a-ad88-8a36c28152e1" >
+		<logger level="INFO" doc:name="payload from EAPI" doc:id="3d1be6f8-0300-4c45-aa0a-a83cb17ced47" message="#[payload]"/>
+		<ee:transform doc:name="Transform Message" doc:id="022f7208-cefa-4100-b595-d009129d4623" >
+			<ee:message >
+				<ee:set-payload resource="dwl/dataToJDE.dwl" />
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="payload for JDE sapi" doc:id="4dc999e1-47dc-46dd-bd5e-415e6f481b48" message="payload"/>
+		<choice doc:name="Choice" doc:id="cc2f265a-2ac8-4574-ab00-c86c46f8f703" >
+			<when expression="#[sizeOf(payload.alphaName) &gt; 40]">
+<!-- 				<email:send doc:name="Send" doc:id="4b22d495-7af5-43d8-b3f6-6e8447a4abdf" fromAddress="apps-noreply@prowesssoft.com" subject="test email">
+					<email:to-addresses>
+						<email:to-address value="simran.modi@prowesssoft.com" />
+						<email:to-address value="suman.chatterjee@prowesssoft.com" />
+					</email:to-addresses>
+					<email:body contentType="text/html">
+						<email:content><![CDATA[#[%dw 2.0
+output application/xml
+skipNullOn="everywhere"
+
+-&#45;&#45;
+{
+    "html":{
+        "head":{
+            "link" @(href:"https://fonts.googleapis.com/css2?family=Open+Sans&display=swap",rel:"stylesheet"): {},
+            "link" @(href:"https://fonts.googleapis.com/css?family=Quicksand:300,400,700",rel:"stylesheet"): {},
+            "style": ".total{​width: 800px;margin: auto;font-family: 'Open Sans', sans-serif;border-style: solid;border-color:dimgrey;}​.header{​padding: 1px;color: white;background-color: #0074c6;display: block;font-size: 20px;text-align: center;}​.content{​margin-top: 30px;padding-left: 30px;padding-right: 30px;}​.imagediv{​margin-top: 50px;margin-bottom: 50px;text-align: center;}​#alertimage{​height: 200px;width: 200px;}​.td_strip{​background-color: darkgray;text-align: start;}​table{​margin: auto;width:90%;}​th,td{​padding: 10px;}​.footer{​background-color: #0074c6;text-align: center;display: block;color: white;padding: 10px;}​.footer > a{​color: white;text-decoration: none;}"
+        },
+        "body":{
+            "div" @(class:"total"):{
+                "div" @(class:"header"):{
+                    "h2":"Alert from Mulesoft"
+                },
+                "div" @(class:"content"):{
+                    "p": "Hi,",
+                    "p": "Greetings!!!",
+					"p": "Error while processing the Records from Salesforce, please take corrective action."
+                },
+                "br":{},"hr":{},"br":{},
+                "div":{
+                    "table" @(width:'40%', border:'1', cellspacing:'0'): {
+							"tr":{
+                                "th": "ID",
+                                "td": payload.id
+                            },
+                              
+                            
+							"tr":{
+                                "th": "Link",
+                                "td": "https://ntnconnect&#45;&#45;muledev.sandbox.lightning.force.com/lightning/r/Account/" ++ payload.id as String ++ "/view"
+                            }  , 
+							"tr":{
+                                "th": "Alpha_Name__c",
+                                "td": payload.alphaName
+                            }     ,
+                            
+							"tr":{
+                                "th": "Error message",
+                                "td": "Character Length exceeds 40 characters"
+                            }                
+				          
+				
+                        }
+                },
+				"br":{},"hr":{},"br":{},
+				"div" @(class:"footer"):{
+                    "p":"Regards,",
+					"p":"Mulesoft Prowess"
+                }
+            }
+        }
+    }
+}]]]></email:content>
+					</email:body>
+				</email:send>
+ -->				<logger level="INFO" doc:name="action to notify the NTN team " doc:id="7f326a2e-02bc-40a7-b770-9c98a13c1940" />
+			</when>
+			<otherwise >
+				<http:request method="POST" doc:name="Request to update JDE table on ntn-jde-sync-sapi" doc:id="40b251e7-1f7c-4823-8a6e-025785d48a57" config-ref="HTTP_Request_configuration1" path="/api/accounts">
+					<reconnect frequency="${max.frequency}" count="${max.retries}" />
+				</http:request>
+			</otherwise>
+		</choice>
+		<ee:transform doc:name="Transform Message" doc:id="963cb62f-c72b-4264-8e5f-464e78ea2818" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/xml
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="44b6e28a-2df5-4138-86b7-44094dd9300e" message="#[payload]"/>
+	</flow>
+</mule>

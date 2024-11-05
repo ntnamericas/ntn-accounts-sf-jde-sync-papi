@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<sub-flow name="jde-to-sf-account-flow" doc:id="63ca38cb-e52c-4212-aba0-d90f91ec3565" >
+		<ee:transform doc:name="Set vars: requestPaths" doc:id="6e1096a9-9af3-4f53-9208-71dae158d189" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+[payload.account]]]></ee:set-payload>
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="fileType" ><![CDATA[%dw 2.0
+output application/java
+---
+"AccoutsData"]]></ee:set-variable>
+				<ee:set-variable variableName="sysRequest" ><![CDATA[%dw 2.0
+output application/java
+---
+payload]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<ee:transform doc:name="Set vars: responseAccountDetails" doc:id="3358b240-1c3a-434e-81d4-bc4be4adc873">
+					<ee:message>
+					</ee:message>
+					<ee:variables>
+				<ee:set-variable variableName="accountDetails" ><![CDATA[%dw 2.0
+output application/json
+---
+vars.sysRequest.accountDetails]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+		<ee:transform doc:name="Set vars: sfRequestforEachAccountList,  totalrecordCount" doc:id="5aa3a0b0-227c-420c-a565-072870914a75" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+var F0005 = vars.accountDetails.F0005
+var F0111 = vars.accountDetails.F0111
+var F0115 = vars.accountDetails.F0115
+var F01151 = vars.accountDetails.F01151
+var F0116 = vars.accountDetails.F0116
+var F4780 = vars.accountDetails.F4780
+var F03012 = vars.accountDetails.F03012
+var F0014 = vars.accountDetails.F0014
+var F57DOLCU = vars.accountDetails.F57DOLCU
+fun accountDetailsF0005(value,value1,value2) = ((F0005 filter (trim($.DRSY) == value1 and trim($.DRRT) == value2 and trim($.DRKY) == value) default [] map {
+	DRDL01: trim($.DRKY) ++ '-' ++ trim($.DRDL01)
+}).DRDL01) reduce ($)
+fun accountDetailssicDescF0005(value,value1,value2) = ((F0005 filter (trim($.DRSY) == value1 and trim($.DRRT) == value2 and trim($.DRKY) == value) default [] map {
+	DRDL01: trim($.DRDL01)
+}).DRDL01) reduce ($)
+fun accountDetailsBillingF0005(value,value1,value2) = ((F0005 filter (trim($.DRSY) == value1 and trim($.DRRT) == value2 and trim($.DRKY) == value) default [] map {
+	DRDL02: trim($.DRDL02)
+}).DRDL02) reduce ($)
+fun accountDetailsF0111(value,value1) = ((F0111 filter (trim($.WWAN8) == value and (trim($.WWIDLN as Number) == value1)) default [] map {
+	WWNLNM: trim($.WWNLNM)
+}).WWNLNM) reduce ($)
+fun accountDetailsWebsiteF0111(value,value1) = ((F0111 filter (trim($.WWAN8) == value and (trim($.WWIDLN as Number) == value1)) default [] map {
+	WWAN8: trim($.WWAN8)
+}).WWAN8) reduce ($)
+fun accountDetailsF0115(value,value1)=((F0115 filter ($.WPAN8 == value and (trim($.WPPHTP) == value1)) default [] map {
+	WPAR1: '(' ++ trim($.WPAR1) ++ ')' ++ trim($.WPPH1)
+}).WPAR1) reduce ($)
+fun accountDetailsF01151(value,value1,value2)=((F01151 filter (($.EAAN8 ~= value) and (trim($.EAIDLN as Number) == value1) and (trim($.EAETP) == value2)) default [] map 
+    {
+	EAEMAL: trim($.EAEMAL)
+}).EAEMAL) reduce ($)
+fun accountDetailsBillingAddressF0116(value,value1) = (F0116 filter (($.ALAN8 == value)) default [] map 
+    {
+	Address: trim($.ALADD1) ++ ' ' ++ trim($.ALADD2) ++ ' ' ++ trim($.ALADD3) ++ ' ' ++ trim($.ALADD4),
+	City: trim($.ALCTY1) default '',
+	StateCode: trim($.ALADDS) default '',
+	PostalCode: trim($.ALADDZ) default '',
+	CountryCode: if ( trim($.ALCTR) == '' and value1 == 'NBCC' ) 'CA' else if ( isBlank((accountDetailsBillingF0005(trim($.ALCTR),'77','CN'))) and value1 == 'NBCC' ) 'CA' else if ( !isBlank((accountDetailsBillingF0005(trim($.ALCTR),'77','CN'))) ) (accountDetailsBillingF0005(trim($.ALCTR),'77','CN')) else 'US',
+	ALEFTB: $.ALEFTB
+}) maxBy ($.ALEFTB)
+// fun accountDetailsShippingAddressF0116(value,value1) = (F0116 filter (($.ALAN8 == value)) default [] map 
+//     {
+//        ShippingAddress : trim($.ALADD1) ++ ' ' ++ trim($.ALADD2) ++ ' ' ++ trim($.ALADD3)++ ' ' ++ trim($.ALADD4),
+//        ShippingCity : trim($.ALCTY1) default '',
+//        ShippingStateCode : trim($.ALADDS) default '',
+//        ShippingPostalCode : trim($.ALADDZ) default '',
+//        ShippingCountryCode : if (trim($.ALCTR) == '' and value1 == 'NBCC') 'CA' else if (isBlank((accountDetailsBillingF0005(trim($.ALCTR),'77','CN'))) and value1 == 'NBCC') 'CA' else if (!isBlank((accountDetailsBillingF0005(trim($.ALCTR),'77','CN'))))  (accountDetailsBillingF0005(trim($.ALCTR),'77','CN')) else 'US',
+//         ALEFTB :  $.ALEFTB
+//     }) maxBy ($.ALEFTB)
+fun accountDetailsF4780(value,value1) = (F4780 filter ((trim($.AXAN8) ~= value) and trim($.AXXRTS) == value1) default [] map {
+	AXDC: $.AXDC
+}).AXDC reduce ($)
+fun accountDetailsbranchCodeF4780(value) = (F4780 filter ((trim($.AXAN8) ~= value)) default [] map {
+	AXEXRA: $.AXEXRA
+}).AXEXRA reduce ($)
+fun accountDetailsF03012(value) = (F03012 filter (trim($.AIAN8) ~= value) default [] map 
+{
+	AICRCD: trim($.AICRCD),
+	AIBADT: trim($.AIBADT),
+	AIACL: trim($.AIACL),
+	AICMGR: trim($.AICMGR),
+	AICPGP: trim($.AICPGP),
+	AIDAOJ: trim($.AIDAOJ),
+	AIDLC: trim($.AIDLC),
+	AIDB: trim($.AIDB),
+	AIARPY: trim($.AIARPY),
+	AIHOLD: trim($.AIHOLD),
+	AITRAR: trim($.AITRAR),
+	AIINMG: trim($.AIINMG),
+	AIAC06: trim($.AIAC06),
+	AIAC05: trim($.AIAC05),
+	AITSTAD: trim($.AITSTAD)
+}) reduce ($)
+fun accountDetailsF0014(value) = ((F0014 filter (trim($.PNPTC) == value) default [] map {
+	PNPTD: ($.PNPTC) ++ "-" ++ ($.PNPTD)
+}).PNPTD) reduce ($)
+fun accountDetailsownerF57DOLCU(value,value1)=((F57DOLCU filter ((trim($.CUAC04) == value) and (trim($.CUDEPT) == value1)) default [] map {
+	CUALPH3: ($.CUALPH3)
+}).CUALPH3) reduce ($)
+fun accountDetailsCoordinatorF57DOLCU(value,value1)=((F57DOLCU filter ((trim($.CUAC06) == value) and (trim($.CUDEPT) == value1)) default [] map {
+	CUALPH3: ($.CUALPH3)
+}).CUALPH3) reduce ($)
+fun accountDetailsEngineerF57DOLCU(value,value1)=((F57DOLCU filter ((trim($.CUAC36) == value) and (trim($.CUDEPT) == value1)) default [] map {
+	CUALPH3: ($.CUALPH3)
+}).CUALPH3) reduce ($)
+fun accountDetailsAccMarkRepF57DOLCU(value,value1)=((F57DOLCU filter ((trim($.CUAC32) == value) and (trim($.CUDEPT) == value1)) default [] map {
+	CUALPH3: ($.CUALPH3)
+}).CUALPH3) reduce ($)
+fun julianDateToNormalDate(julianDate) = (((19 + (julianDate[0] as Number))* 100) + (julianDate[1 to 2] as Number) ++ julianDate[3 to 5]) as Date {
+	format: "yyyyDDD"
+} as Date {
+	format:"yyyy-MM-dd"
+}
+---
+(payload  default [] map {
+	firstAddressNumber: $.ABAN81  default '',
+	secondAddressNumber: $.ABAN82  default '',
+	thridPartyBilling: $.ABAN83  default '',
+	name: trim($.ABALPH)  default '',
+	accountNumber: $.ABAN8  default '',
+	recordType: if ( trim($.ABSIC) == "NBCC" and  trim($.ABAT1) == 'C' ) '012f4000000MFV5AAO'    else if ( trim($.ABSIC) == "NBCC" and  trim($.ABAT1) == 'CX' ) '012f4000000MFV5AAO' else if ( trim($.ABSIC) == "NBCC" and  trim($.ABAT1) == 'EU' ) '012f4000000d9wxAAA' else if ( trim($.ABSIC) == "NBCC" and  trim($.ABAT1) == 'EUX' ) '012f4000000d9wxAAA' else '',
+	addressType: if ( trim($.ABSIC) == "NBCC" and  $.ABAT1 == 'C' ) accountDetailsF0005(trim($.ABAT1),'01','ST')  else if ( trim($.ABSIC) == "NBCC" and  trim($.ABAT1) == 'CX' ) accountDetailsF0005(trim($.ABAT1),'01','ST')  else if ( trim($.ABSIC) == "NBCC" and  trim($.ABAT1) == 'EU' ) accountDetailsF0005(trim($.ABAT1),'01','ST')  else if ( trim($.ABSIC) == "NBCC" and  trim($.ABAT1) == 'EUX' ) accountDetailsF0005(trim($.ABAT1),'01','ST')  else '',
+	alphaName: trim($.ABALPH),
+	billToNumber: trim($.ABAN81), // 2. Write value of ABAN81 as output to SF
+	customerServiceCoordinatorCode: if (!isBlank($.ABAC05) and ($.ABAC05) != null) accountDetailsF0005(trim($.ABAC05),'01','06') else '',
+	dunsNumber: trim($.ABDUNS),
+	effectiveDate: if ( ($.ABEFFTB)!=null and !isBlank(($.ABEFFTB)) and (($.ABEFFTB) != '0') ) julianDateToNormalDate(($.ABEFFTB)) else ($.ABEFFTB), // JDE julian date, need to transform
+	numberOfEmployees: $.ABNOE,
+	growthRate: $.ABGROWTHR,
+	jdeAddressNumber: $.ABAN8,
+	longAddressNumber: trim($.ABALKY),
+	nbcaMarket: if (!isBlank($.ABAC01) and ($.ABAC01) != null) accountDetailsF0005(trim($.ABAC01),'01','01') else '',
+	nbcaMktDes: if (!isBlank($.ABAC08) and ($.ABAC08) != null) accountDetailsF0005(trim($.ABAC08),'01' ,'08') else '',
+	ntnAdvPrcGrp: "", // need to map & understand query
+	ntnCompanyName: trim($.ABSIC),
+	ntnCustType: if (!isBlank($.ABAC03) and ($.ABAC03) != null) accountDetailsF0005(trim($.ABAC03),'01','03') else '',
+	ntnCustomerGroup: if (!isBlank($.ABAC10) and ($.ABAC10) != null) accountDetailsF0005(trim($.ABAC10),'01','10') else '',
+	ntnGlobalMarket: if (!isBlank($.ABAC12) and ($.ABAC12) != null) accountDetailsF0005(trim($.ABAC12), '01','12') else '',
+	ntnMarketCode: if (!isBlank($.ABAC08) and ($.ABAC08) != null) accountDetailsF0005(trim($.ABAC08),'01','08') else '',
+	region: if (!isBlank($.ABAC02) and ($.ABAC02) != null) accountDetailsF0005(trim($.ABAC02),'01','02') else '',
+	repCode: if (!isBlank($.ABAC04) and ($.ABAC04) != null) accountDetailsF0005(trim($.ABAC04),'01','04') else '',
+	sic: trim($.ABSIC),
+	sicDesc:  accountDetailssicDescF0005(trim($.ABSIC),'01','SC'), // 3. Write the Description field values only (DRDL01) as the output to SF
+	status: if ( trim($.ABSIC) == "NBCC" and  trim($.ABAT1) == 'C' ) 'Active'    else if ( trim($.ABSIC) == "NBCC" and  trim($.ABAT1) == 'CX' ) 'Inactive' else if ( trim($.ABSIC) == "NBCC" and  trim($.ABAT1) == 'EU' ) 'Active' else if ( trim($.ABSIC) == "NBCC" and  trim($.ABAT1) == 'EUX' ) 'Inactive' else '',
+	"type": if ( trim($.ABSIC) == "NBCC" and  trim($.ABAT1) == 'C' ) 'Customer'    else if ( trim($.ABSIC) == "NBCC" and  trim($.ABAT1) == 'CX' ) 'Customer' else if ( trim($.ABSIC) == "NBCC" and  trim($.ABAT1) == 'EU' ) 'End User' else if ( trim($.ABSIC) == "NBCC" and  trim($.ABAT1) == 'EUX' ) 'End User' else '',
+	yearStarted: trim($.ABYEARSTAR),
+	mailingName: accountDetailsF0111(trim($.ABAN8),'0'),
+	billToFax: accountDetailsF0115($.ABAN81,'FAX'),
+	billToPhone: accountDetailsF0115($.ABAN81,''),
+	fax: accountDetailsF0115(trim($.ABAN8),'FAX'),
+	phone: accountDetailsF0115(trim($.ABAN8),''),
+	website: accountDetailsF01151(accountDetailsWebsiteF0111(trim($.ABAN8),'0'),'0','I'),
+	billingStreet: (accountDetailsBillingAddressF0116($.ABAN81,$.ABSIC)).Address,
+	billingCity: (accountDetailsBillingAddressF0116($.ABAN81,$.ABSIC)).City,
+	billingStateCode: (accountDetailsBillingAddressF0116($.ABAN81,$.ABSIC)).StateCode,
+	billingPostalCode: (accountDetailsBillingAddressF0116($.ABAN81,$.ABSIC)).PostalCode,
+	billingCountryCode: (accountDetailsBillingAddressF0116($.ABAN81,$.ABSIC)).CountryCode,
+	shippingStreet: (accountDetailsBillingAddressF0116($.ABAN8,$.ABSIC)).Address,
+	shippingCity: (accountDetailsBillingAddressF0116($.ABAN8,$.ABSIC)).City,
+	shippingStateCode: (accountDetailsBillingAddressF0116($.ABAN8,$.ABSIC)).StateCode,
+	shippingPostalCode: (accountDetailsBillingAddressF0116($.ABAN8,$.ABSIC)).PostalCode,
+	shippingCountryCode: (accountDetailsBillingAddressF0116($.ABAN8,$.ABSIC)).CountryCode,
+	// shippingAddress : (accountDetailsShippingAddressF0116($.ABAN8,$.ABSIC)),
+	parent: if ( !isBlank(accountDetailsF4780(trim($.ABAN86),'SF')) ) (accountDetailsF4780($.ABAN86,'SF')) else '',
+	parentNumber: $.ABAN86,
+	currencyIsoCode: accountDetailsF03012($.ABAN8).AICRCD,
+	billingAddressType: accountDetailsF0005((accountDetailsF03012($.ABAN8).AIBADT),'H42',"BA"),
+	creditLimit: accountDetailsF03012($.ABAN8).AIACL,
+	creditManager: if (!isBlank(accountDetailsF03012($.ABAN8).AICMGR) and (accountDetailsF03012($.ABAN8).AICMGR) != null) accountDetailsF0005((accountDetailsF03012($.ABAN8).AICMGR),'01',"CR") else '',
+	customerPriceGroupPc: accountDetailsF0005((accountDetailsF03012($.ABAN8).AICPGP),'40','PC'),
+	dateAccountOpened: if ( (accountDetailsF03012($.ABAN8).AIDAOJ)!= null and !isBlank((accountDetailsF03012($.ABAN8).AIDAOJ)) and (accountDetailsF03012($.ABAN8).AIDAOJ) != '0' ) julianDateToNormalDate(accountDetailsF03012($.ABAN8).AIDAOJ) else (accountDetailsF03012($.ABAN8).AIDAOJ), //JDE julian date, need to transform
+	
+dateOfLastCreditReview: if ( ((accountDetailsF03012($.ABAN8).AIDLC) != null) and (!isBlank((accountDetailsF03012($.ABAN8).AIDLC)) and ((accountDetailsF03012($.ABAN8).AIDLC)  != '0')) ) julianDateToNormalDate(accountDetailsF03012($.ABAN8).AIDLC) else (accountDetailsF03012($.ABAN8).AIDLC), //JDE julian date, need to transform
+	
+dunBradStreetRating: if (!isBlank(accountDetailsF03012($.ABAN8).AIDB) and (accountDetailsF03012($.ABAN8).AIDB) != null) accountDetailsF0005((accountDetailsF03012($.ABAN8).AIDB),'01','DB') else '',
+	factorSpecialPayee: (accountDetailsF03012($.ABAN8).AIARPY),
+	holdOrdersCode: accountDetailsF0005((accountDetailsF03012($.ABAN8).AIHOLD),'42','HC'),
+	paymentTermsAr: accountDetailsF0014((accountDetailsF03012($.ABAN8).AITRAR)),
+	printMessage: if (!isBlank(accountDetailsF03012($.ABAN8).AIINMG) and (accountDetailsF03012($.ABAN8).AIINMG) != null) accountDetailsF0005((accountDetailsF03012($.ABAN8).AIINMG),'40','PM') else '',
+	temporaryCreditMessage: accountDetailsF0005((accountDetailsF03012($.ABAN8).AITSTAD),'00','CM'),
+	branchCode: accountDetailsbranchCodeF4780($.ANAB8),
+	owner: accountDetailsownerF57DOLCU(trim($.ABAC04),'Rep'),
+	accountCoordinator: accountDetailsCoordinatorF57DOLCU(trim($.ABAC05),'Coordinator'),
+	engineer: if (!isBlank(accountDetailsF03012($.ABAN8).AIAC06) and (accountDetailsF03012($.ABAN8).AIAC06) != null) accountDetailsF0005((accountDetailsF03012($.ABAN8).AIAC06),'01','06') else '',
+	billToAccount: if ( !isBlank(accountDetailsF4780(trim($.ABAN81),'SF')) ) (accountDetailsF4780($.ABAN81,'SF')) else '',
+	accountEngineer: accountDetailsEngineerF57DOLCU((accountDetailsF03012($.ABAN8).AIAC06),'Engineering'),
+	integrationComplete: if ( trim($.ABSIC) == "NBCC" and  trim($.ABAT1) == 'C' ) 'true'   else if ( trim($.ABSIC) == "NBCC" and  trim($.ABAT1) == 'CX' ) 'true'   else if ( trim($.ABSIC) == "NBCC" and  trim($.ABAT1) == 'EU' ) 'true'   else if ( trim($.ABSIC) == "NBCC" and  trim($.ABAT1) == 'EUX' ) 'true'   else '',
+	"isAccountActivated": if ( trim($.ABSIC) == "NBCC" and  trim($.ABAT1) == 'C' ) 'true'   else if ( trim($.ABSIC) == "NBCC" and  trim($.ABAT1) == 'CX' ) 'false'   else if ( trim($.ABSIC) == "NBCC" and  trim($.ABAT1) == 'EU' ) 'true'   else if ( trim($.ABSIC) == "NBCC" and  trim($.ABAT1) == 'EUX' ) 'false'   else '',
+	accountMarketingRep: accountDetailsAccMarkRepF57DOLCU((accountDetailsF03012($.ABAN8).AIAC05),'Mkt'),
+	"mktRep": if (!isBlank(accountDetailsF03012($.ABAN8).AIAC05) and (accountDetailsF03012($.ABAN8).AIAC05) != null) accountDetailsF0005((accountDetailsF03012($.ABAN8).AIAC05),'01','05') else '',
+	"ntnCompanyNumber": if ( $.ABSIC == 'NBCC' ) "00010" else "00001"
+})]]></ee:set-payload>
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="totalrecordCount" ><![CDATA[%dw 2.0
+output application/json
+---
+0]]></ee:set-variable>
+				<ee:set-variable variableName="sfAccountResponse" ><![CDATA[%dw 2.0
+output application/json
+---
+[]]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<choice doc:name="Choice" doc:id="d5c9e820-cec8-4a73-867a-9eefdbdee6e5" >
+			<when expression="#[!isEmpty(payload)]">
+				<ee:transform doc:name="set Vars : requestPaths,sfRequestAccountList" doc:id="dd38d3a7-fac7-4024-802c-d9b102f31b5a">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload[0]]]></ee:set-payload>
+					</ee:message>
+						<ee:variables>
+							<ee:set-variable variableName="recordCount"><![CDATA[%dw 2.0
+output application/json
+---
+sizeOf(payload)]]></ee:set-variable>
+							<ee:set-variable variableName="requestPaths"><![CDATA[%dw 2.0
+output application/java
+---
+{
+	"url" : p('sfdc-request.https.protocol') ++ ":" ++ "//" ++ p('sfdc-request.https.host') ++ ":" ++ p('sfdc-request.https.port') ++ p('sfdc-request.https.accounts'),
+	"method" : p('sfdc-request.https.accounts-method'),
+	"client_id": p('ntn-sfdc.clientId'),
+	"client_secret": p('secure::ntn-sfdc.clientSecret')
+	
+}]]></ee:set-variable>
+						</ee:variables>
+				</ee:transform>
+				<flow-ref doc:name="common-request-subflow" doc:id="186a43c0-d3ae-4f75-a5cc-8d1d8008f4ea" name="common-request-subflow" />
+				<ee:transform doc:name="set Vars: totalrecordCount, Incoming Response Structure" doc:id="adafe891-9ae7-4111-bf5e-e288b6250175">
+						<ee:message>
+							<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+						</ee:message>
+						<ee:variables>
+							<ee:set-variable variableName="totalrecordCount"><![CDATA[%dw 2.0
+output application/json
+---
+vars.recordCount + vars.totalrecordCount]]></ee:set-variable>
+						<ee:set-variable variableName="sfAccountResponse" ><![CDATA[%dw 2.0
+output application/json
+---
+payload
+
+//vars.sfAccountResponse << payload]]></ee:set-variable>
+						</ee:variables>
+					</ee:transform>
+				<ee:transform doc:name="Final payload" doc:id="6e7acb33-37a2-45fd-ac3c-643c13f529dd" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"totalrecordCount" : vars.totalrecordCount,
+	"sfAccountResponse" : vars.sfAccountResponse
+}
+]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</when>
+			<otherwise >
+				<ee:transform doc:name="Default message" doc:id="d693797b-0eb5-4d01-8e1d-6bf19c3654b4" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"Status" : "customer data not found in customerList"
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</otherwise>
+		</choice>
+		<logger level="INFO" doc:name="Final log message" doc:id="ce73c9c9-d3cd-4721-9b96-e379afd47022" message="Successfully created or updated the records in sfdc - #[flow.name] executions has completed-#[correlationId]-AccountData-#[now()]"/>
+	</sub-flow>
+</mule>

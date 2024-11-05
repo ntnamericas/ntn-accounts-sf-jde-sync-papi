@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:email="http://www.mulesoft.org/schema/mule/email" xmlns:validation="http://www.mulesoft.org/schema/mule/validation"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd
+http://www.mulesoft.org/schema/mule/email http://www.mulesoft.org/schema/mule/email/current/mule-email.xsd">
+	<sub-flow name="common-request-subflow" doc:id="860e7312-d3a5-403c-be2c-f96822d0f57a" >
+		<try doc:name="Try" doc:id="f8677527-f054-4a2d-ad66-c57cb4b31310" >
+			<until-successful maxRetries="#[p('untilSuccess.retries')]" doc:name="Until Successful" doc:id="5b76bbd8-8b39-4999-ac55-118bd277037b" millisBetweenRetries="#[p('untilSuccess.timeInterval')]">
+				<try doc:name="Try" doc:id="3da01ccd-1746-4732-94dc-b1a4f0a46412" >
+					<http:request method="#[vars.requestPaths.method]" doc:name="Request for db and sfdc system api's" doc:id="8a784b3a-694d-453a-b846-b8437c78981f" url="#[vars.requestPaths.url]" responseTimeout="${http-request.timeout}">
+			<http:headers><![CDATA[#[output application/java
+var params =  if ( vars.requestPaths.url contains 'accounts' ) {
+	"Accept": "application/json",
+	"Content-Type": "application/json",
+	"x-correlation-id": correlationId,
+	"client_id": vars.requestPaths.client_id,
+	"client_secret": vars.requestPaths.client_secret
+}  else if ( vars.requestPaths.url contains 'accountsdetails' ) {
+	"Accept": "application/json",
+	"Content-Type": "application/json",
+	"x-correlation-id": correlationId,
+	"client_id": vars.requestPaths.client_id,
+	"client_secret": vars.requestPaths.client_secret
+}else {
+		"client_id" : vars.requestPaths.client_id,
+	"client_secret" : vars.requestPaths.client_secret
+}
+---
+params]]]></http:headers>
+			<http:query-params><![CDATA[#[output application/java
+var params =  if ( vars.requestPaths.url contains 'pricebook' ) {
+	"IsActive": true,
+	"IsStandard": true
+} else {
+}
+---
+params]]]></http:query-params>
+		</http:request>
+					<remove-variable doc:name="Remove Error Variable" doc:id="53584e01-9cee-4efe-8cd8-36d2566e7570" variableName="error_object" />
+					<error-handler >
+						<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="65b7782b-0dc1-47a1-8f8b-a21aaa8cbcff" when='#[error.errorType.identifier != "CONNECTIVITY"]'>
+							<logger level="INFO" doc:name="error Logger" doc:id="9359ac26-03f6-4274-944c-cf9fbc5b15ae" message="Not retrying since not a connectivity failure with error #[error.description] with correlation id #[correlationId]" />
+							<ee:transform doc:name="DW errorDescription" doc:id="73ba4d5d-351b-4eb8-9049-74b607105b02" >
+								<ee:message >
+									<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+if (!isEmpty(error.errorMessage.payload)) ({
+	"errorCode": error.errorMessage.attributes.statusCode  default 500,
+	"errorType": error.errorMessage.payload.errorCode  default error.errorType,
+	"errorMessage": error.exception.localizedMessage,
+	"errorDescription": error.errorMessage.payload.errorMessage  default error.description,
+	"identifier": error.errorMessage.payload.identifier default error.errorType.identifier,
+	"transactionId": correlationId,
+	"timeStamp": now()
+})
+else
+{
+	"identifier": error.errorType.identifier,
+	"errorDescription": error.description,
+	"errorCode": error.muleMessage.typedAttributes.statusCode default error.exception.cause.cause.statusCode default 500,
+	"errorType": error.errorType,
+	"transactionId": correlationId,
+	"timeStamp": now()
+}]]></ee:set-payload>
+								</ee:message>
+								<ee:variables >
+									<ee:set-variable variableName="error_object" ><![CDATA[%dw 2.0
+output application/json
+---
+if(!isEmpty(error.errorMessage.payload))
+(
+	{
+    "errorCode" : error.errorMessage.attributes.statusCode  default 500,
+    "errorType" : error.errorMessage.payload.errorCode  default error.errorType,
+    "errorMessage" : error.exception.localizedMessage,
+    "errorDescription" : error.errorMessage.payload.errorMessage  default error.description,
+    "identifier" : error.errorMessage.payload.identifier default error.errorType.identifier,
+    "transactionId" : correlationId,
+    "timeStamp" : now()
+}
+)
+else
+{
+	"identifier": error.errorType.identifier,
+	"errorDescription": error.description,
+	"errorCode": error.muleMessage.typedAttributes.statusCode default error.exception.cause.cause.statusCode default 500,
+	"errorType": error.errorType,
+	"transactionId": correlationId,
+	"timeStamp": now()
+}
+
+]]></ee:set-variable>
+								</ee:variables>
+							</ee:transform>
+						</on-error-continue>
+					</error-handler>
+				</try>
+			</until-successful>
+			<validation:is-true doc:name="errors other than connectivity errors" doc:id="85fe9814-4a02-4f21-883c-973f37cb23be" expression="#[vars.error_object == null]" message='#[(vars.error_object.namespace default "") ++ ":" ++ (vars.error_object.identifier default "")]'/>
+			<error-handler >
+				<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="ae91328d-21a3-4692-bf83-3ec4003e779d" type="ANY">
+					<logger level="INFO" doc:name="Connectivity error log" doc:id="ee7884a4-426e-48d8-a07b-9bc42e7de055" message="SFDC and DB calling request service has down"/>
+					<ee:transform doc:name="DW errorDescription" doc:id="66e46def-5682-4e79-a2eb-433983169977" >
+						<ee:message >
+							<ee:set-payload ><![CDATA[output application/json
+---
+if (!isEmpty(vars.error_object.errorMessage)) (vars.error_object)
+
+else
+{
+	"errorCode": error.errorCode,
+	"errorDescription": error.description,
+	"identifier": error.errorType.identifier,
+	"errorType": error.errorType,
+	"transactionId": correlationId,
+	"timeStamp": now() as DateTime
+}
+
+
+]]></ee:set-payload>
+						</ee:message>
+					</ee:transform>
+				</on-error-propagate>
+			</error-handler>
+		</try>
+	</sub-flow>
+</mule>

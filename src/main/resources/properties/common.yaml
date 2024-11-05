@@ -1,0 +1,75 @@
+app:
+  name:    ${project.artifactId} # replaced through Maven resource filtering
+  version: ${project.version}    # replaced through Maven resource filtering
+
+#untilsuccessful
+untilSuccess:
+  retries: "2"
+  timeInterval: "3000"
+
+#Common properties
+common:
+  errors:
+    error-code-400: "BAD_REQUEST"
+    error-code-404: "NOT_FOUND"
+    error-code-405: "METHOD_NOT_ALLOWED"
+    error-code-406: "NOT_ACCEPTABLE"
+    error-code-415: "UNSUPPORTED_MEDIA_TYPE"
+    error-code-500: "INTERNAL_SERVER_ERROR"
+    error-code-501: "NOT_IMPLEMENTED"  
+
+max:
+  retries: "3"
+  frequency: "6000"
+  
+mock.https.request:
+  basepath: "/get"
+  host: "postman-echo.com"
+  port: "443"
+
+
+mule.httpResponseTimeout: "90000000"
+
+healthPath: "/health"
+
+retry:
+ frequency: "3000"
+ attempts: "3"
+ 
+project.version: "v1" 
+ 
+api:
+  context:      "${api.context}"    # replaced through Maven resource filtering
+  layer:        "${api.layer}"    # replaced through Maven resource filtering
+  groupId:      "${api.groupId}"    # replaced through Maven resource filtering
+  artifactId:   "${api.artifactId}" # replaced through Maven resource filtering
+  version:      "${api.version}"    # replaced through Maven resource filtering
+  spec: "resource::${api.groupId}:${api.artifactId}:${api.version}:raml:zip:${api.artifactId}.raml" # replaced through Maven resource filtering
+  majorVersion: "v1"
+  
+deps.https.listener:
+  attemptMillis: "2000"
+  frequency: "2"
+  timeout: "30000"
+  
+timeout:
+  connection: "1200000"
+deps.health:
+  milliesBetweenRetries: "1000"
+  maxRetries: "2"
+  timeoutMillis: "1000" 
+
+
+reconnect:
+  frequency: "120000"
+  attempts: "5"
+  
+
+  
+http:
+  reconnectionFrequency: "3000"
+  reconnectionAttempts: "5"
+  retryCount: "5"
+  retryFrequency: "3000"
+  
+

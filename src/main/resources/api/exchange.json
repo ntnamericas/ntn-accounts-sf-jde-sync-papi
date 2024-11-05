@@ -1,0 +1,13 @@
+{
+  "main": "ntn-accounts-sync-papi.raml",
+  "name": "ntn-accounts-sync-papi",
+  "groupId": "e78cb80e-5627-43bc-8962-f4d269c5ef87",
+  "assetId": "ntn-accounts-sync-papi",
+  "version": "1.0.5",
+  "classifier": "raml",
+  "tags": [],
+  "descriptorVersion": "1.0.0",
+  "organizationId": "e78cb80e-5627-43bc-8962-f4d269c5ef87",
+  "apiVersion": "v1",
+  "originalFormatVersion": "1.0"
+}

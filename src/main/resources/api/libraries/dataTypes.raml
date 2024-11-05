@@ -1,0 +1,12 @@
+#%RAML 1.0 Library
+usage: Library containing all New Opportunity Creation project data types.
+
+types: 
+  HealthStatus: !include ../dataTypes/response/health-status.raml
+  Payload:
+    type: object
+    properties:
+      status: integer
+      payload: object
+    example: !include ../examples/200-generic-payload.raml
+ 

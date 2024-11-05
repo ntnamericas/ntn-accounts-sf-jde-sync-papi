@@ -1,0 +1,57 @@
+#%RAML 1.0
+title: ntn-accounts-sync-papi
+version: v1
+# baseUri: https://{app-name}/api/{version}
+protocols: [HTTPS,HTTP]
+mediaType: application/json
+# securitySchemes:
+#   security: !include libraries/securitySchemes.raml
+# securedBy: [security] 
+
+uses:
+   dt: /libraries/dataTypes.raml
+   rt: /libraries/resourceType.raml
+types:
+  account-sf: !include /dataTypes/request/post-account-sf-1.raml
+/health:
+  displayName: Get API Health
+  description: |
+    Resource representing an application being online ,turns an HTTP GET and returning a 200.
+  type: 
+    rt.ReadOnlyResourceType:
+      getSuccessResponseType: dt.HealthStatus
+      getSuccessResponse: !include examples/200-health-payload.raml    
+  
+/accounts:
+  displayName: create account
+  description:  |
+        Resource to new account in salesforce.   
+  type: 
+    rt.CreateOnlyResourceType :
+      postRequestType: !include /dataTypes/request/post-account.raml
+      postRequestExample: !include /examples/request/post-account.json
+
+/jde :
+  /accounts:
+    displayName: create account
+    description:  |
+      Resource to new account in salesforce.
+    post:
+      body:
+        application/json:
+          type: account-sf
+          example: !include /examples/request/post-accounts-sf-1.json
+      responses:
+            201:
+                  body:
+                        application/json:
+                              example: "success"
+                                        
+
+
+
+
+
+
+
+

@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<types:mule xmlns:types="http://www.mulesoft.org/schema/mule/types">
+  <types:catalog>
+    <types:type name="sfinput" format="json">
+      <types:shape format="weave" example="examples/sfinput.json"><![CDATA[%dw 2.0
+
+type sfinput = {|
+  ntnGlobalMarket: String, 
+  ntnAdvPrcGrp: String, 
+  alphaName: String, 
+  billingAddressType: String, 
+  billToNumber: String, 
+  customerServiceCoordinatorCode: String, 
+  customerPriceGroup40PC: String, 
+  custTypeCode: Null, 
+  dunsNumber: String, 
+  fax: String, 
+  id: String, 
+  jdeAddressNumber: String, 
+  nbcaMarket: String, 
+  ntnCustomerGroup: String, 
+  ntnMarketCode: String, 
+  parentNumber: String, 
+  phone: String, 
+  region: String, 
+  ntnSalesRep: String, 
+  shippingStateCode: String, 
+  shippingCity: String, 
+  shippingCountryCode: String, 
+  shippingPostalCode: String, 
+  shippingStreet: String, 
+  "type": Null, 
+  searchType: Null, 
+  ntnCompanyName: String, 
+  mktRep: String, 
+  engineer: String
+|} {"example": "{\\\"ntnGlobalMarket\\\":\\\"IOE-Industrial OEM\\\",\\\"ntnAdvPrcGrp\\\":\\\"GSABA45-GSABA45\\\",\\\"alphaName\\\":\\\"TEST@ MULEDEV ACCOUNT\\\",\\\"billingAddressType\\\":\\\"X-Bill To and Ship To Address\\\",\\\"billToNumber\\\":\\\"29188,0\\\",\\\"customerServiceCoordinatorCode\\\":\\\"RN-Rod Neville\\\",\\\"customerPriceGroup40PC\\\":\\\"MRO-Advanced Pricing\\\",\\\"custTypeCode\\\":null,\\\"dunsNumber\\\":\\\"12345678\\\",\\\"fax\\\":\\\"1234567898\\\",\\\"id\\\":\\\"001VC00000HKSKxYAP\\\",\\\"jdeAddressNumber\\\":\\\"29188.0\\\",\\\"nbcaMarket\\\":\\\"30-Industrial Aftermarket\\\",\\\"ntnCustomerGroup\\\":\\\"3-Regular\\\",\\\"ntnMarketCode\\\":\\\"NN-Transportation (Snowmobile)\\\",\\\"parentNumber\\\":\\\"29366.0\\\",\\\"phone\\\":\\\"(902)634-8821\\\",\\\"region\\\":\\\"EAS-Eastern Region\\\",\\\"ntnSalesRep\\\":\\\"V2E-Darrell McKay\\\",\\\"shippingStateCode\\\":\\\"NS\\\",\\\"shippingCity\\\":\\\"LUNENBURG\\\",\\\"shippingCountryCode\\\":\\\"B0J 2C0\\\",\\\"shippingPostalCode\\\":\\\"B0J 2C0\\\",\\\"shippingStreet\\\":\\\"1600 Bishop Ct.\\\\nCorporate Office\\\\nSuite 207\\\\nUnit 1\\\",\\\"type\\\":null,\\\"searchType\\\":null,\\\"ntnCompanyName\\\":\\\"NBCC\\\",\\\"mktRep\\\":\\\"RN-Ron Neville\\\",\\\"engineer\\\":\\\"C2S-Trevor Schotsman\\\"}"}
+
+]]></types:shape>
+    </types:type>
+  </types:catalog>
+  <types:enrichment select="#022f7208-cefa-4100-b595-d009129d4623"/>
+  <types:enrichment select="#6e1096a9-9af3-4f53-9208-71dae158d189"/>
+</types:mule>
