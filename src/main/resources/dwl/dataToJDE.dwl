@@ -22,6 +22,7 @@ fun cleanBillToNumber(a) =
 	"ntnSalesRep": upper(extractFirstPart(payload.ntnSalesRep, "-")),
 	"customerServiceCoordinatorCode": upper(extractFirstPart (payload.customerServiceCoordinatorCode , "-")),
 	"mktRep": upper(extractFirstPart(payload.mktRep,"-")),
+	"customerPriceGroup40PC":  upper(extractFirstPart(payload.customerPriceGroup40PC,"-")),
 	"engineer": upper(extractFirstPart(payload.engineer, "-")),
 	"ntnMarketCode": upper(extractFirstPart(payload.ntnMarketCode, "-")),
 	"ntnGlobalMarket": upper(extractFirstPart(payload.ntnGlobalMarket,"-")),

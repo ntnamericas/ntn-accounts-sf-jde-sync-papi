@@ -1,28 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties"
+<mule xmlns:email="http://www.mulesoft.org/schema/mule/email"
+	xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties"
 	xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit"
-	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
 	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/email http://www.mulesoft.org/schema/mule/email/current/mule-email.xsd 
 http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd 
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd">
-	<configuration-properties doc:name="Configuration properties" doc:id="f4dbd25c-9cfe-4cb1-bb89-991e21f3178d" file="properties/${env}-properties.yaml" />
-		<http:request-config name="HTTP_Request_configuration1" doc:name="HTTP Request configuration" doc:id="da7ceb15-58dc-4ba5-a9de-9b448798ce03" >
-		<http:request-connection host="${jde.sapi.host}" port="${jde.sapi.port}" protocol="HTTPS"/>
+	<configuration-properties
+		doc:name="Configuration properties"
+		doc:id="f4dbd25c-9cfe-4cb1-bb89-991e21f3178d"
+		file="properties/${env}-properties.yaml" />
+	<http:request-config
+		name="HTTP_Request_configuration1"
+		doc:name="HTTP Request configuration"
+		doc:id="da7ceb15-58dc-4ba5-a9de-9b448798ce03">
+		<http:request-connection
+			host="${jde.sapi.host}" port="${jde.sapi.port}" protocol="HTTPS" />
 	</http:request-config>
-    <http:listener-config name="ntn-accounts-sync-papi-httpListenerConfig">
-        <http:listener-connection host="${http.host}" port="${http.port}" />
-    </http:listener-config>
-    <apikit:config name="ntn-accounts-sync-papi-config" api="ntn-accounts-sync-papi.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" >
-		<apikit:flow-mappings >
-			<apikit:flow-mapping resource="/accounts" action="post" content-type="application/json" flow-ref="sf-to-jdeFlow" />
-			<apikit:flow-mapping resource="/jde/accounts" action="post" content-type="application/json" flow-ref="jde-to-sf-account-flow" />
+	<http:listener-config
+		name="ntn-accounts-sync-papi-httpListenerConfig">
+		<http:listener-connection host="${http.host}"
+			port="${http.port}" />
+	</http:listener-config>
+	<apikit:config name="ntn-accounts-sync-papi-config"
+		api="ntn-accounts-sync-papi.raml"
+		outboundHeadersMapName="outboundHeaders"
+		httpStatusVarName="httpStatus">
+		<apikit:flow-mappings>
+			<apikit:flow-mapping resource="/accounts"
+				action="post" content-type="application/json"
+				flow-ref="sf-to-jdeFlow" />
+			<apikit:flow-mapping resource="/jde/accounts"
+				action="post" content-type="application/json"
+				flow-ref="jde-to-sf-account-flow" />
 
 		</apikit:flow-mappings>
 	</apikit:config>
-		<http:request-config name="mockHttpsRequest"
+	<http:request-config name="mockHttpsRequest"
 		doc:name="HTTPS Request configuration"
 		doc:id="71f4a31d-0fa3-4ca6-b64b-50818b3c99ee">
 		<http:request-connection protocol="HTTPS"
@@ -36,9 +56,29 @@ http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/sc
 			<http:query-param key="foo" value="bar" />
 		</http:default-query-params>
 	</http:request-config>
-	<configuration-properties doc:name="Configuration properties" doc:id="430adf00-1c95-4062-81cf-0461f869ebd0" file="properties/common.yaml" />
-	<secure-properties:config name="Secure_Properties_Config" doc:name="Secure Properties Config" doc:id="84b83530-722d-462b-8315-2d8b94393766" file="properties/${env}-secure-properties.yaml" key="${encrypt.key}" >
-		<secure-properties:encrypt algorithm="Blowfish" />
+	<configuration-properties
+		doc:name="Configuration properties"
+		doc:id="430adf00-1c95-4062-81cf-0461f869ebd0"
+		file="properties/common.yaml" />
+	<secure-properties:config
+		name="Secure_Properties_Config" doc:name="Secure Properties Config"
+		doc:id="84b83530-722d-462b-8315-2d8b94393766"
+		file="properties/${env}-secure-properties.yaml" key="${encrypt.key}">
+		<secure-properties:encrypt
+			algorithm="Blowfish" />
 	</secure-properties:config>
-	<global-property doc:name="Global Property" doc:id="7168f829-5128-4ce4-ae9b-a89152c6428c" name="encrypt.key" value="secure12345" />
+	<global-property doc:name="Global Property"
+		doc:id="7168f829-5128-4ce4-ae9b-a89152c6428c" name="encrypt.key"
+		value="secure12345" />
+	<email:smtp-config name="Email_SMTP1"
+		doc:name="Email SMTP" doc:id="f29ef1ba-cb2b-4b98-b26c-aac72837dc56">
+		<email:smtp-connection host="${smtp.host}"
+			port="${smtp.port}" user="${secure::smtp.user}"
+			password="${secure::smtp.password}">
+			<email:properties>
+				<email:property key="mail.smtp.starttls.enable"
+					value="true" />
+			</email:properties>
+		</email:smtp-connection>
+	</email:smtp-config>
 </mule>

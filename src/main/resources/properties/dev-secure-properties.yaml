@@ -1,8 +1,4 @@
-#bpp-db-sys-api client details
-ntn:
-  db:
-    clientSecret: "![]"
-
-#bpp-sfdc-sys-api client details
-ntn-sfdc:
-  clientSecret: "![]"  
+  
+smtp:
+  user: "![hRt1ri9KnH7VngaJcayGZ0D8arLBERHy1f3i+Ca4XPI=]"
+  password: "![Yk3HBzCPPp5RL3nOfWNzirX1mi98hVMs]"  

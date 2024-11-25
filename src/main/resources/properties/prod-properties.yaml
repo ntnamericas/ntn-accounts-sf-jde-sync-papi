@@ -41,10 +41,10 @@ for-each:
 #app name
 app:
   name: "ntn-accounts-sf-jde-sync-papi"  
-  env: "UAT"  
+  env: "PROD"  
   
 smtp:
   host: "smtp.office365.com"
   port: "25"  
-  to: "simran.modi@prowesssoft.com"
+  to: "dghaffari@ntnusa.com,hhopkins@ntnusa.com,bgomberg@ntnusa.com"
   

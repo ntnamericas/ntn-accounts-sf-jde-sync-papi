@@ -39,5 +39,12 @@ for-each:
   batchSize: "35"  
   
 #app name
-application:
-  name: "ntn-accounts-process-api"     
+app:
+  name: "ntn-accounts-sf-jde-sync-papi"  
+  env: "DEV"  
+  
+smtp:
+  host: "smtp.office365.com"
+  port: "25"  
+  to: "simran.modi@prowesssoft.com"
+  
