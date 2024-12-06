@@ -107,7 +107,7 @@ ns sforce http://soap.sforce.com/2005/09/outbound
   'soapenv:Envelope' @('xmlns:soapenv': "http://schemas.xmlsoap.org/soap/envelope/"): {
     'soapenv:Body': {
       'notificationsResponse' @('xmlns': "http://soap.sforce.com/2005/09/outbound"): {
-        Ack: "false"
+        Ack: false
       }
     }
   }
@@ -123,7 +123,7 @@ ns sforce http://soap.sforce.com/2005/09/outbound
 					<reconnect frequency="${max.frequency}" count="${max.retries}" />
 				</http:request>
 					<error-handler >
-						<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="1e390335-7e96-4458-905c-0c24696b66ce" >
+						<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="1e390335-7e96-4458-905c-0c24696b66ce" type="ANY">
 							<ee:transform doc:name="Transform Message" doc:id="0df81c04-f330-4046-a928-be9fad511d06">
 								<ee:message>
 									<ee:set-payload><![CDATA[%dw 2.0
@@ -212,7 +212,7 @@ ns sforce http://soap.sforce.com/2005/09/outbound
   'soapenv:Envelope' @('xmlns:soapenv': "http://schemas.xmlsoap.org/soap/envelope/"): {
     'soapenv:Body': {
       'notificationsResponse' @('xmlns': "http://soap.sforce.com/2005/09/outbound"): {
-        Ack: "false"
+        Ack: false
       }
     }
   }
@@ -220,6 +220,7 @@ ns sforce http://soap.sforce.com/2005/09/outbound
 ]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="691edee1-8953-4dcb-bb16-e13dee98fa84" message="#[payload]"/>
 	
 </sub-flow>
 	

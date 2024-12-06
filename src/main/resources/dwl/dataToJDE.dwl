@@ -6,12 +6,14 @@ fun extractFirstPart(a, b) =
     if ( a != null ) (a splitBy b)[0] as String else null
 var phoneR = if(payload.phone != null)(payload.phone replace /[()\-\s]/ with "") else ""
 var FaxR = if(payload.fax != null)(payload.fax replace /[()\-\s]/ with "") else ""
-fun cleanBillToNumber(a) =
-    if (( a contains "," )and a != null) a replace /,/ with "" 
-    else 
-        payload.billToNumber as Number
 
-      
+fun cleanBillToNumber(a) =
+    if (a != null and (a contains ",")) 
+        a replace /,/ with "" 
+    else if (a != null) 
+        a as Number 
+    else 
+        null      
 ---
 {
 	"id": upper(payload.id),
@@ -30,8 +32,8 @@ fun cleanBillToNumber(a) =
 	"shippingPostalCode": if (payload.shippingPostalCode != null) upper(payload.shippingPostalCode) else  "",
 	"alphaName": if ( payload.alphaName != null and sizeOf(payload.alphaName as String) <= 40 ) upper(payload.alphaName) else payload.alphaName,
 	"jdeAddressNumber": if (payload.jdeAddressNumber != null) payload.jdeAddressNumber as Number as String else null,
-	"billToNumber": cleanBillToNumber(payload.billToNumber) as String,
-	"parentNumber": cleanBillToNumber(payload.parentNumber) as String,
+	"billToNumber": if (cleanBillToNumber(payload.billToNumber) != null) cleanBillToNumber(payload.billToNumber) as String else null,
+	"parentNumber": if(cleanBillToNumber(payload.parentNumber) != null) cleanBillToNumber(payload.parentNumber) as String else null ,
 	"ntnAdvPrcGrp": upper(extractFirstPart(payload.ntnAdvPrcGrp, "-")),
 	"billingAddressType": upper(extractFirstPart(payload.billingAddressType, "-")),
 	"shippingCountryCode": payload.shippingCountryCode,
