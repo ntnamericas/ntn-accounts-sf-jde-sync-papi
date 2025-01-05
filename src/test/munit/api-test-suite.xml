@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="api-test-suite.xml" />
+	<munit:test name="api-test-suite-ntn-accounts-sync-papi-mainTest" doc:id="a87217cc-63d7-43b0-ae78-2d530a3508db" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="2d1fb2bf-c8af-4281-864f-4948c30b0f9a" processor="apikit:router">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="ntn-accounts-sync-papi-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to ntn-accounts-sync-papi-main" doc:id="a5a358df-83a5-4f02-8a9e-bf4c089ae56a" name="ntn-accounts-sync-papi-main"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="b499273d-92b4-4f37-b744-df673787717e" expression="#[payload]" is="#[MunitTools::notNullValue()]"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="api-test-suite-ntn-accounts-sync-papi-mainTest1" doc:id="71e426cd-7b0e-4908-a150-89af428e48e2" description="Test" expectedErrorType="ANY">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="9e55b8e2-d15e-455a-8b59-03909699f2f2" processor="apikit:router" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="ntn-accounts-sync-papi-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="APIKIT:BAD_REQUEST" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to ntn-accounts-sync-papi-main" doc:id="f35abf4b-f6b0-4cbb-84d9-31103506d9ed" name="ntn-accounts-sync-papi-main" />
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="be08326f-9533-40fa-be45-caa463749160" expression="#[payload]" is="#[MunitTools::notNullValue()]" />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="api-test-suite-ntn-accounts-sync-papi-mainTest2" doc:id="ef9d746e-43f5-4d3e-bca6-70ea4093d037" description="Test" expectedErrorType="ANY">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="5e7622a1-ea88-458b-a431-bc23c8c64759" processor="apikit:router" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="ntn-accounts-sync-papi-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="APIKIT:NOT_FOUND" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to ntn-accounts-sync-papi-main" doc:id="8e576e05-ba3e-4d0f-af27-aed2195e0ec2" name="ntn-accounts-sync-papi-main" />
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="7f637d09-13c8-40eb-be43-9d257f86e9b0" expression="#[payload]" is="#[MunitTools::notNullValue()]" />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="api-test-suite-ntn-accounts-sync-papi-mainTest3" doc:id="e0c8f72a-ad19-40d9-b7ae-e202d68ecd4f" description="Test" expectedErrorType="ANY">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="8bc56d1a-33f5-4e0c-848a-ca5bbf2c0dbb" processor="apikit:router" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="ntn-accounts-sync-papi-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="APIKIT:METHOD_NOT_ALLOWED" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to ntn-accounts-sync-papi-main" doc:id="11b8cffa-5dc6-478b-90b2-66ddb0e45b63" name="ntn-accounts-sync-papi-main" />
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="cc4711d5-1867-4868-a6ed-e9864665787c" expression="#[payload]" is="#[MunitTools::notNullValue()]" />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="api-test-suite-ntn-accounts-sync-papi-mainTest4" doc:id="ac2012f0-d4b2-4e34-be18-4d46fcb972a1" description="Test" expectedErrorType="ANY">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="9c6f7478-3d38-4c13-bf9b-08aad8b74cb0" processor="apikit:router" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="ntn-accounts-sync-papi-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="APIKIT:NOT_ACCEPTABLE" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to ntn-accounts-sync-papi-main" doc:id="91ed86dd-e1d2-47f3-9eb8-43ba691cb45e" name="ntn-accounts-sync-papi-main" />
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="e0c231a8-881c-4aed-accf-04de53394336" expression="#[payload]" is="#[MunitTools::notNullValue()]" />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="api-test-suite-ntn-accounts-sync-papi-mainTest5" doc:id="7f597155-e69b-4044-845e-4067f40e3575" description="Test" expectedErrorType="ANY">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="e794c462-07e3-43e6-bb45-a414fa03db01" processor="apikit:router" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="ntn-accounts-sync-papi-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="APIKIT:UNSUPPORTED_MEDIA_TYPE" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to ntn-accounts-sync-papi-main" doc:id="46282798-0dc4-4dc3-9101-fe3075555d80" name="ntn-accounts-sync-papi-main" />
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="eb86517f-f840-45ea-96b0-3cb420b99936" expression="#[payload]" is="#[MunitTools::notNullValue()]" />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="api-test-suite-ntn-accounts-sync-papi-mainTest6" doc:id="05da4cc3-6409-4dfb-bf97-178a87d089cc" description="Test" expectedErrorType="ANY">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="a89d7c52-ba3e-4f1a-aff0-66e885afc927" processor="apikit:router" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="ntn-accounts-sync-papi-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="APIKIT:NOT_IMPLEMENTED" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to ntn-accounts-sync-papi-main" doc:id="38b1ed47-2b55-4f10-b261-71b3b1334f1a" name="ntn-accounts-sync-papi-main" />
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="8d89757d-4b4a-4d13-a85a-e0e752fb6eb5" expression="#[payload]" is="#[MunitTools::notNullValue()]" />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="api-test-suite-get:\health:ntn-accounts-sync-papi-configTest" doc:id="f70ebc12-6d1e-4c08-b14f-71b8661edcf6" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="667476dc-6a3d-44bf-9d55-05537e259a21" processor="ee:transform">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Transform Message" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to get:\health:ntn-accounts-sync-papi-config" doc:id="7819590a-4171-4faf-a2a1-c510e685a8f3" name="get:\health:ntn-accounts-sync-papi-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="54223e6d-5089-4747-aa76-3ca9dc4f0033" expression="#[payload]" is="#[MunitTools::notNullValue()]"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="api-test-suite-post:\accounts:application\json:ntn-accounts-sync-papi-configTest" doc:id="fbbd01da-3c5c-4d9b-93f4-a10e76656de7" description="Test" expectedErrorType="ANY">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="5d2bcbbe-4940-4753-a114-eeee55214230" processor="ee:transform">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Transform Message" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to post:\accounts:application\json:ntn-accounts-sync-papi-config" doc:id="7b3a5667-880c-4e68-be61-308c0f5ac6d3" name="post:\accounts:application\json:ntn-accounts-sync-papi-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="2b5cadb8-7e17-485e-99f3-c025a18a8e52" expression="#[payload]" is="#[MunitTools::notNullValue()]"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="sf-to-jde-account-test-suite-sf-to-jdeFlowTest1-size&gt;40" doc:id="b0366b33-84a7-4e90-93ac-f3bdd7d4314c" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="239abd35-d367-43d2-b9e6-6c53424756f9" processor="choice" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Choice" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="ec25f60c-3d65-42a3-bc7e-3580e551a2d2" >
+				<munit:payload value='#[{&#10;  "ntnGlobalMarket": null,&#10;  "ntnAdvPrcGrp": null,&#10;  "alphaName": "NBCC: ALUDYNE INC-12345678901234451222222222222222",&#10;  "billingAddressType": "N-Non-Ship Location",&#10;  "billToNumber": null,&#10;  "customerServiceCoordinatorCode": null,&#10;  "customerPriceGroup40PC": null,&#10;  "custTypeCode": null,&#10;  "dunsNumber": null,&#10;  "fax": null,&#10;  "id": "001RT00000JF3yrYAD",&#10;  "jdeAddressNumber": null,&#10;  "nbcaMarket": null,&#10;  "ntnCustomerGroup": null,&#10;  "ntnMarketCode": null,&#10;  "parentNumber": null,&#10;  "phone": "(248) 728-8700",&#10;  "region": "EAS-Eastern Region",&#10;  "ntnSalesRep": "T2E-Giovanna Sacco",&#10;  "shippingStateCode": "AB",&#10;  "shippingCity": "COLUMBUS",&#10;  "shippingCountryCode": "CA",&#10;  "shippingPostalCode": "31904",&#10;  "shippingStreet": "1558 NORTHSIDE IND BLVD",&#10;  "type": "End User",&#10;  "ntnCompanyName": "NBCC",&#10;  "mktRep": null,&#10;  "engineer": null,&#10;  "lastModifiedById": null,&#10;  "status": "Active"&#10;}]' />
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to sf-to-jdeFlow" doc:id="342ec2fb-c86d-4d75-985b-69e6df6310d6" name="sf-to-jdeFlow" />
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="06a584bf-8010-47b1-bd2f-26272898b679" expression="#[payload]" is="#[MunitTools::notNullValue()]" />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="sf-to-jde-account-test-suite-sf-to-jdeFlowTest" doc:id="8f465a9f-bc74-41d9-8d42-df1146fd3efe" description="Test">
+		<munit:behavior>
+			<munit-tools:mock-when doc:name="Mock when" doc:id="557938ca-8c9a-427c-ba1e-9bb2821b3630" processor="choice">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute whereValue="Choice" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<munit:set-event doc:name="Set Event" doc:id="9bdde41e-f9d4-4103-b916-478acc946222">
+				<munit:payload value='#[{&#10;  "ntnGlobalMarket": null,&#10;  "ntnAdvPrcGrp": null,&#10;  "alphaName": "NBCC: ALUDYNE INC-1",&#10;  "billingAddressType": "N-Non-Ship Location",&#10;  "billToNumber": null,&#10;  "customerServiceCoordinatorCode": null,&#10;  "customerPriceGroup40PC": null,&#10;  "custTypeCode": null,&#10;  "dunsNumber": null,&#10;  "fax": null,&#10;  "id": "001RT00000JF3yrYAD",&#10;  "jdeAddressNumber": null,&#10;  "nbcaMarket": null,&#10;  "ntnCustomerGroup": null,&#10;  "ntnMarketCode": null,&#10;  "parentNumber": null,&#10;  "phone": "(248) 728-8700",&#10;  "region": "EAS-Eastern Region",&#10;  "ntnSalesRep": "T2E-Giovanna Sacco",&#10;  "shippingStateCode": "AB",&#10;  "shippingCity": "COLUMBUS",&#10;  "shippingCountryCode": "CA",&#10;  "shippingPostalCode": "31904",&#10;  "shippingStreet": "1558 NORTHSIDE IND BLVD",&#10;  "type": "End User",&#10;  "ntnCompanyName": "NBCC",&#10;  "mktRep": null,&#10;  "engineer": null,&#10;  "lastModifiedById": null,&#10;  "status": "Active"&#10;}]' />
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to sf-to-jdeFlow" doc:id="0a90d6d1-2add-4b75-b362-6a55dc2e59ad" name="sf-to-jdeFlow" />
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-that doc:name="Assert that" doc:id="a7c8eff9-f64e-4023-bb5a-3f8c0b808c39" expression="#[payload]" is="#[MunitTools::notNullValue()]" />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="sf-to-jde-account-test-suite-sf-to-jdeFlowTest1" doc:id="5d0d6de5-a1db-4029-9520-af973f8df44d" description="Test" expectedErrorType="ANY">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="06bed34c-f826-4f92-8fdc-62aad8002374" processor="choice" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Choice" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Mock when" doc:id="a4ddcf99-fec9-472f-92b1-005e82a71218" processor="http:request">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="POST" attributeName="method" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="HTTP:TIMEOUT" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="e3fa205f-25d1-4803-8490-81e2aea2557a" >
+				<munit:payload value='#[{&#10;  "ntnGlobalMarket": null,&#10;  "ntnAdvPrcGrp": null,&#10;  "alphaName": "NBCC: ALUDYNE INC-1",&#10;  "billingAddressType": "N-Non-Ship Location",&#10;  "billToNumber": null,&#10;  "customerServiceCoordinatorCode": null,&#10;  "customerPriceGroup40PC": null,&#10;  "custTypeCode": null,&#10;  "dunsNumber": null,&#10;  "fax": null,&#10;  "id": "001RT00000JF3yrYAD",&#10;  "jdeAddressNumber": null,&#10;  "nbcaMarket": null,&#10;  "ntnCustomerGroup": null,&#10;  "ntnMarketCode": null,&#10;  "parentNumber": null,&#10;  "phone": "(248) 728-8700",&#10;  "region": "EAS-Eastern Region",&#10;  "ntnSalesRep": "T2E-Giovanna Sacco",&#10;  "shippingStateCode": "AB",&#10;  "shippingCity": "COLUMBUS",&#10;  "shippingCountryCode": "CA",&#10;  "shippingPostalCode": "31904",&#10;  "shippingStreet": "1558 NORTHSIDE IND BLVD",&#10;  "type": "End User",&#10;  "ntnCompanyName": "NBCC",&#10;  "mktRep": null,&#10;  "engineer": null,&#10;  "lastModifiedById": null,&#10;  "status": "Active"&#10;}]' />
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to sf-to-jdeFlow" doc:id="11afca8f-7d9f-4695-aaa8-ed97ed2858cf" name="sf-to-jdeFlow" />
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="1939fed1-d9d1-4247-8374-4e725d4aa5f2" expression="#[payload]" is="#[MunitTools::notNullValue()]" />
+		</munit:validation>
+	</munit:test>
+
+
+</mule>
