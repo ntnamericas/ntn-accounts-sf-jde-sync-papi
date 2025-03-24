@@ -4,7 +4,7 @@ http:
   timeout: "15000"
   
 jde.sapi:
-  host: "ntn-accounts-sf-jde-sync-sapi-dev-tpw8fz.89unfu.usa-e2.cloudhub.io"
+  host: "ntn-accounts-sf-jde-sync-sapi-prod-xbmlkc.xryhvh.usa-e2.cloudhub.io"
   port: "443"
 #  host: "0.0.0.0"
 
@@ -16,7 +16,7 @@ sfdc-request:
   https:
     accounts-method: "POST"
     protocol: "https"
-    host: "ntn-accounts-sf-sapi-dev-tpw8fz.89unfu.usa-e2.cloudhub.io"
+    host: "ntn-accounts-sf-sapi-prod-xbmlkc.xryhvh.usa-e2.cloudhub.io"
     port: "443"
     accounts: "/api/v1/account"
       
@@ -46,5 +46,5 @@ app:
 smtp:
   host: "smtp.office365.com"
   port: "25"  
-  to: "dghaffari@ntnusa.com,hhopkins@ntnusa.com,bgomberg@ntnusa.com"
+  to: "donotreply@ntnusa.com,ntnmule@prowesssoft.com"
   

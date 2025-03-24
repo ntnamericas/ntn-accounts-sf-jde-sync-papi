@@ -33,12 +33,8 @@ http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/sc
 		outboundHeadersMapName="outboundHeaders"
 		httpStatusVarName="httpStatus">
 		<apikit:flow-mappings>
-			<apikit:flow-mapping resource="/accounts"
-				action="post" content-type="application/json"
-				flow-ref="sf-to-jdeFlow" />
-			<apikit:flow-mapping resource="/jde/accounts"
-				action="post" content-type="application/json"
-				flow-ref="jde-to-sf-account-flow" />
+			<apikit:flow-mapping resource="/accounts" action="post" content-type="application/json" flow-ref="sf-to-jdeFlow" />
+
 
 		</apikit:flow-mappings>
 	</apikit:config>
