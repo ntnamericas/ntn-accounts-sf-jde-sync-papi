@@ -3,3 +3,48 @@ http:
   port: "8081"
   timeout: "15000"
   
+jde.sapi:
+  host: "ntn-accounts-sf-jde-sync-sapi-dev-tpw8fz.89unfu.usa-e2.cloudhub.io"
+  port: "443"
+#  host: "0.0.0.0"
+
+  
+      
+
+#ntn-sfdc-sys-api Listener configuration
+sfdc-request:
+  https:
+    accounts-method: "POST"
+    protocol: "https"
+    host: "ntn-accounts-sf-sapi-dev-tpw8fz.89unfu.usa-e2.cloudhub.io"
+    port: "443"
+    accounts: "/api/v1/account"
+      
+
+#ntn-db-sys-api client details
+ntn:
+  db:
+    clientId: "" 
+
+#ntn-sfdc-sys-api client details
+ntn-sfdc:
+  clientId: "" 
+    
+#Request Timeout config
+http-request:
+  timeout: "6000000"  
+  
+#For Each batch size details
+for-each:
+  batchSize: "35"  
+  
+#app name
+app:
+  name: "ntn-accounts-sf-jde-sync-papi"  
+  env: "UAT"  
+  
+smtp:
+  host: "smtp.office365.com"
+  port: "25"  
+  to: "simran.modi@prowesssoft.com"
+  

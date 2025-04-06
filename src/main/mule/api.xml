@@ -129,7 +129,4 @@ output application/json
             </ee:message>
         </ee:transform>
     </flow>
-    <flow name="post:\jde\accounts:application\json:ntn-accounts-sync-papi-config">
-        <flow-ref doc:name="jde-to-sf-account-flow" doc:id="6cdb88bf-5991-412f-8662-c7c4725e5ee7" name="jde-to-sf-account-flow"/>
-    </flow>
 </mule>

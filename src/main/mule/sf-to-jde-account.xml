@@ -12,8 +12,11 @@ http://www.mulesoft.org/schema/mule/email http://www.mulesoft.org/schema/mule/em
 			<ee:message >
 				<ee:set-payload resource="dwl/dataToJDE.dwl" />
 			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="id" ><![CDATA[payload.id]]></ee:set-variable>
+			</ee:variables>
 		</ee:transform>
-		<logger level="INFO" doc:name="payload for JDE sapi" doc:id="4dc999e1-47dc-46dd-bd5e-415e6f481b48" message="payload"/>
+		<logger level="INFO" doc:name="payload for JDE sapi" doc:id="4dc999e1-47dc-46dd-bd5e-415e6f481b48" message="#[payload]"/>
 		<choice doc:name="Choice" doc:id="cc2f265a-2ac8-4574-ab00-c86c46f8f703" >
 			<when expression="#[sizeOf(payload.alphaName) &gt; 40]">
 <!-- 				<email:send doc:name="Send" doc:id="4b22d495-7af5-43d8-b3f6-6e8447a4abdf" fromAddress="apps-noreply@prowesssoft.com" subject="test email">
@@ -82,6 +85,15 @@ skipNullOn="everywhere"
 					</email:body>
 				</email:send>
  -->
+				<ee:transform doc:name="Transform Message" doc:id="d646f17b-3a1a-47a0-85fa-4f77227a01d1">
+					<ee:message>
+						<ee:set-payload><![CDATA["Size of Alpha Name is greater than 40 character"]]></ee:set-payload>
+					</ee:message>
+					<ee:variables >
+						<ee:set-variable variableName="error" ><![CDATA["(sizeOf(payload.alphaName) > 40)   is true "]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+				<flow-ref doc:name="Flow Reference" doc:id="2eb87f5f-5876-4d9b-b925-8b838d345320" name="email_notification_sub_Flow"/>
 				<ee:transform doc:name="Transform Message" doc:id="0470b45d-a12b-4c2d-b8aa-200085959691" >
 					<ee:message >
 						<ee:set-payload ><![CDATA[%dw 2.0
@@ -95,7 +107,7 @@ ns sforce http://soap.sforce.com/2005/09/outbound
   'soapenv:Envelope' @('xmlns:soapenv': "http://schemas.xmlsoap.org/soap/envelope/"): {
     'soapenv:Body': {
       'notificationsResponse' @('xmlns': "http://soap.sforce.com/2005/09/outbound"): {
-        Ack: "false"
+        Ack: false
       }
     }
   }
@@ -106,9 +118,25 @@ ns sforce http://soap.sforce.com/2005/09/outbound
 				<logger level="INFO" doc:name="action to notify the NTN team " doc:id="7f326a2e-02bc-40a7-b770-9c98a13c1940" message='"alphaName value is greater than 40"' />
 			</when>
 			<otherwise >
-				<http:request method="POST" doc:name="Request to update JDE table on ntn-jde-sync-sapi" doc:id="40b251e7-1f7c-4823-8a6e-025785d48a57" config-ref="HTTP_Request_configuration1" path="/api/accounts">
+				<try doc:name="Try" doc:id="b9d7bb6e-7b3a-40ce-8fce-d0972b97b658" >
+					<http:request method="POST" doc:name="Request to update JDE table on ntn-jde-sync-sapi" doc:id="40b251e7-1f7c-4823-8a6e-025785d48a57" config-ref="HTTP_Request_configuration1" path="/api/accounts">
 					<reconnect frequency="${max.frequency}" count="${max.retries}" />
 				</http:request>
+					<error-handler >
+						<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="1e390335-7e96-4458-905c-0c24696b66ce" type="ANY">
+							<ee:transform doc:name="Transform Message" doc:id="0df81c04-f330-4046-a928-be9fad511d06">
+								<ee:message>
+									<ee:set-payload><![CDATA[%dw 2.0
+output application/java
+---
+error.exception.detailMessage]]></ee:set-payload>
+								</ee:message>
+							</ee:transform>
+							<logger level="INFO" doc:name="Logger" doc:id="370b81da-c66f-4479-b567-7294d9ea2fe5" />
+							<flow-ref doc:name="Flow Reference" doc:id="e7906458-32c8-46cb-b543-8085e6731343" name="email_notification_sub_Flow"/>
+						</on-error-propagate>
+					</error-handler>
+				</try>
 				<ee:transform doc:name="Transform Message" doc:id="963cb62f-c72b-4264-8e5f-464e78ea2818">
 			<ee:message>
 				<ee:set-payload><![CDATA[%dw 2.0
@@ -121,4 +149,79 @@ payload]]></ee:set-payload>
 			</otherwise>
 		</choice>
 	</flow>
+	<sub-flow name="email_notification_sub_Flow" doc:id="e8e3d2a4-a60f-480a-81c9-6005113dd2bf" >
+		<email:send doc:name="Send" doc:id="e5b63262-ab35-4b69-aad6-8767df458e95" toAddresses="#[p('smtp.to') splitBy &quot;,&quot;]" fromAddress="${secure::smtp.user}" subject="#[&quot;*** E-mail Notification: &quot; ++ p('app.env') ++ &quot; Kind Attention *** Error Alert in  &quot; ++ p('app.name')]" config-ref="Email_SMTP1">
+			<email:body contentType="text/html" encoding="UTF-8">
+				<email:content ><![CDATA[#[%dw 2.0
+output application/xml
+skipNullOn="everywhere"
+
+---
+{
+    "html":{
+        "body":{
+            "div" @(class:"total"):{
+                "div" @(class:"header"):{
+                    "h2":"Alert from Mulesoft"
+                },
+                "div" @(class:"content"):{
+                    "p": "Hi,",
+                    "p": "Greetings!!!",
+					"p": "Error while processing, please take corrective action."
+                },
+
+                "div":{
+                    "table" @(width:'40%', border:'1', cellspacing:'0'): {
+							"tr":{
+                                "th": "InterfaceName",
+                                "td": p('app.name')
+                            },
+                          "tr":{
+                                "th": "Error Type",
+                                "td": if ( error.errorType.asString != null) error.errorType.asString else vars.error
+                            },
+                          "tr":{
+                                "th": "Salesforce Id",
+                                "td": vars.id
+                            },
+                          "tr":{
+                                "th": "Error Message",
+                                "td": payload
+                            }
+                                                     
+				
+                        }
+                }
+            }
+        }
+    }
+}]]]></email:content>
+			</email:body>
+		</email:send>
+		<logger level="INFO" doc:name="Logger" doc:id="c55b48c3-d9be-481a-a56e-260e5d3281ee" message='#["email sent"]'/>
+		<ee:transform doc:name="Transform Message" doc:id="4272c11a-9d65-4da2-88af-c0487a2f7196" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/xml
+ns soapenv http://schemas.xmlsoap.org/soap/envelope/
+ns sforce http://soap.sforce.com/2005/09/outbound
+
+
+---
+{
+  'soapenv:Envelope' @('xmlns:soapenv': "http://schemas.xmlsoap.org/soap/envelope/"): {
+    'soapenv:Body': {
+      'notificationsResponse' @('xmlns': "http://soap.sforce.com/2005/09/outbound"): {
+        Ack: false
+      }
+    }
+  }
+}
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="691edee1-8953-4dcb-bb16-e13dee98fa84" message="#[payload]"/>
+	
+</sub-flow>
+	
 </mule>
