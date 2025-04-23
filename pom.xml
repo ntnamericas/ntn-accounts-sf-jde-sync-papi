@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.mycompany</groupId>
+	<groupId>com.ntn</groupId>
 	<artifactId>ntn-accounts-sync-papi</artifactId>
-	<version>1.1.0-rc1</version>
+	<version>1.1.0-rc4</version>
 	<packaging>mule-application</packaging>
 	<name>ntn-accounts-sf-jde-sync-papi</name>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<app.runtime>4.5.1</app.runtime>
-		<mule.maven.plugin.version>4.3.0</mule.maven.plugin.version>
+		<app.runtime>4.9.3</app.runtime>
+		<mule.maven.plugin.version>4.4.0</mule.maven.plugin.version>
 		<munit.version>3.0.0</munit.version>
 	</properties>
 	<build>
@@ -25,6 +25,9 @@
 				<artifactId>mule-maven-plugin</artifactId>
 				<version>${mule.maven.plugin.version}</version>
 				<extensions>true</extensions>
+				<configuration>
+					<classifier>mule-application</classifier>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>com.mulesoft.munit.tools</groupId>
@@ -56,12 +59,6 @@
 			<groupId>com.mulesoft.modules</groupId>
 			<artifactId>mule-secure-configuration-property-module</artifactId>
 			<version>1.2.7</version>
-			<classifier>mule-plugin</classifier>
-		</dependency>
-		<dependency>
-			<groupId>org.mule.modules</groupId>
-			<artifactId>mule-validation-module</artifactId>
-			<version>2.0.6</version>
 			<classifier>mule-plugin</classifier>
 		</dependency>
 		<dependency>
@@ -107,6 +104,12 @@
 			<version>3.3.0</version>
 			<classifier>mule-plugin</classifier>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mule.modules</groupId>
+			<artifactId>mule-validation-module</artifactId>
+			<version>2.0.7</version>
+			<classifier>mule-plugin</classifier>
 		</dependency>
 	</dependencies>
 	<repositories>

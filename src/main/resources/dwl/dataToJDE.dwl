@@ -16,7 +16,7 @@ fun cleanBillToNumber(a) =
         null      
 ---
 {
-	"id": upper(payload.id),
+	"id": payload.id,
 	"nbcaMarket": upper(extractFirstPart(payload.nbcaMarket, "-") ),
 	"region": upper(extractFirstPart(payload.region,"-")),
 	"custTypeCode": upper(extractFirstPart (payload.custTypeCode , "-")),
@@ -39,31 +39,13 @@ fun cleanBillToNumber(a) =
 	"shippingCountryCode": payload.shippingCountryCode,
 	"shippingCity": if (payload.shippingCity != null) upper(payload.shippingCity) else "",
 	"dunsNumber": if (payload.dunsNumber != null ) upper(payload.dunsNumber) else null,
-
-    
 	"fax": if(payload.fax != null)"(" ++ FaxR[0 to 2] ++ ")" ++ FaxR[3 to 5] ++ "-" ++ FaxR[6 to 9] else null,
-
-
 	"phone": if(payload.phone != null)"(" ++ phoneR[0 to 2] ++ ")" ++ phoneR[3 to 5] ++ "-" ++ phoneR[6 to 9] else null,
-
-
 	"ntnCompanyName":  if (payload.ntnCompanyName != null) upper(payload.ntnCompanyName) else null,
 	"advPriceAG": "NO",
 	"advPriceEMB": "NO",
 	"advPriceUCP": "EMB" ,
-  "lastModifiedById": payload.lastModifiedById,
-  "searchType": 
-    if (payload.lastModifiedById != "005VC000004ZZqDYAW" and payload.lastModifiedById != "005f4000000x8iHAAQ") 
-
-    if (payload.ntnCompanyName == "NBCC" and payload."type" == "Customer" and payload.status == "Active") 
-        "C"
-    else if (payload.ntnCompanyName == "NBCC" and payload."type" == "Customer" and payload.status != "Active")
-        "CX"
-    else if (payload.ntnCompanyName == "NBCC" and payload."type" == "End User" and payload.status == "Active") 
-        "EU"
-    else if (payload.ntnCompanyName == "NBCC" and payload."type" == "End User" and payload.status != "Active") 
-        "EUX"
-    else 
-        ""
-        else ""
+  	"lastModifiedById": payload.lastModifiedById,
+  	"searchType": payload.searchType
+    
 }

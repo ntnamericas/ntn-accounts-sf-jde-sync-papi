@@ -64,12 +64,13 @@ reconnect:
   frequency: "120000"
   attempts: "5"
   
-
-  
 http:
   reconnectionFrequency: "3000"
   reconnectionAttempts: "5"
   retryCount: "5"
   retryFrequency: "3000"
-  
+ 
+sf:
+  ignoreId1 : "005VC000004ZZqDYAW"
+  ignoreId2 : "005f4000000x8iHAAQ" 
 

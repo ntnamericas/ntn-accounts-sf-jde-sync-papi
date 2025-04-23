@@ -19,72 +19,7 @@ http://www.mulesoft.org/schema/mule/email http://www.mulesoft.org/schema/mule/em
 		<logger level="INFO" doc:name="payload for JDE sapi" doc:id="4dc999e1-47dc-46dd-bd5e-415e6f481b48" message="#[payload]"/>
 		<choice doc:name="Choice" doc:id="cc2f265a-2ac8-4574-ab00-c86c46f8f703" >
 			<when expression="#[sizeOf(payload.alphaName) &gt; 40]">
-<!-- 				<email:send doc:name="Send" doc:id="4b22d495-7af5-43d8-b3f6-6e8447a4abdf" fromAddress="apps-noreply@prowesssoft.com" subject="test email">
-					<email:to-addresses>
-						<email:to-address value="simran.modi@prowesssoft.com" />
-						<email:to-address value="suman.chatterjee@prowesssoft.com" />
-					</email:to-addresses>
-					<email:body contentType="text/html">
-						<email:content><![CDATA[#[%dw 2.0
-output application/xml
-skipNullOn="everywhere"
 
--&#45;&#45;
-{
-    "html":{
-        "head":{
-            "link" @(href:"https://fonts.googleapis.com/css2?family=Open+Sans&display=swap",rel:"stylesheet"): {},
-            "link" @(href:"https://fonts.googleapis.com/css?family=Quicksand:300,400,700",rel:"stylesheet"): {},
-            "style": ".total{​width: 800px;margin: auto;font-family: 'Open Sans', sans-serif;border-style: solid;border-color:dimgrey;}​.header{​padding: 1px;color: white;background-color: #0074c6;display: block;font-size: 20px;text-align: center;}​.content{​margin-top: 30px;padding-left: 30px;padding-right: 30px;}​.imagediv{​margin-top: 50px;margin-bottom: 50px;text-align: center;}​#alertimage{​height: 200px;width: 200px;}​.td_strip{​background-color: darkgray;text-align: start;}​table{​margin: auto;width:90%;}​th,td{​padding: 10px;}​.footer{​background-color: #0074c6;text-align: center;display: block;color: white;padding: 10px;}​.footer > a{​color: white;text-decoration: none;}"
-        },
-        "body":{
-            "div" @(class:"total"):{
-                "div" @(class:"header"):{
-                    "h2":"Alert from Mulesoft"
-                },
-                "div" @(class:"content"):{
-                    "p": "Hi,",
-                    "p": "Greetings!!!",
-					"p": "Error while processing the Records from Salesforce, please take corrective action."
-                },
-                "br":{},"hr":{},"br":{},
-                "div":{
-                    "table" @(width:'40%', border:'1', cellspacing:'0'): {
-							"tr":{
-                                "th": "ID",
-                                "td": payload.id
-                            },
-                              
-                            
-							"tr":{
-                                "th": "Link",
-                                "td": "https://ntnconnect&#45;&#45;muledev.sandbox.lightning.force.com/lightning/r/Account/" ++ payload.id as String ++ "/view"
-                            }  , 
-							"tr":{
-                                "th": "Alpha_Name__c",
-                                "td": payload.alphaName
-                            }     ,
-                            
-							"tr":{
-                                "th": "Error message",
-                                "td": "Character Length exceeds 40 characters"
-                            }                
-				          
-				
-                        }
-                },
-				"br":{},"hr":{},"br":{},
-				"div" @(class:"footer"):{
-                    "p":"Regards,",
-					"p":"Mulesoft Prowess"
-                }
-            }
-        }
-    }
-}]]]></email:content>
-					</email:body>
-				</email:send>
- -->
 				<ee:transform doc:name="Transform Message" doc:id="d646f17b-3a1a-47a0-85fa-4f77227a01d1">
 					<ee:message>
 						<ee:set-payload><![CDATA["Size of Alpha Name is greater than 40 character"]]></ee:set-payload>
@@ -119,7 +54,7 @@ ns sforce http://soap.sforce.com/2005/09/outbound
 			</when>
 			<otherwise >
 				<try doc:name="Try" doc:id="b9d7bb6e-7b3a-40ce-8fce-d0972b97b658" >
-					<http:request method="POST" doc:name="Request to update JDE table on ntn-jde-sync-sapi" doc:id="40b251e7-1f7c-4823-8a6e-025785d48a57" config-ref="HTTP_Request_configuration1" path="/api/accounts">
+					<http:request method="POST" doc:name="Request to update JDE table on ntn-jde-sync-sapi" doc:id="40b251e7-1f7c-4823-8a6e-025785d48a57" config-ref="HTTP_Request_configuration1" sendCorrelationId="ALWAYS" path="${jde.sapi.path}">
 					<reconnect frequency="${max.frequency}" count="${max.retries}" />
 				</http:request>
 					<error-handler >
@@ -129,7 +64,7 @@ ns sforce http://soap.sforce.com/2005/09/outbound
 									<ee:set-payload><![CDATA[%dw 2.0
 output application/java
 ---
-error.exception.detailMessage]]></ee:set-payload>
+error.detailedDescription]]></ee:set-payload>
 								</ee:message>
 							</ee:transform>
 							<logger level="INFO" doc:name="Logger" doc:id="370b81da-c66f-4479-b567-7294d9ea2fe5" />
@@ -150,7 +85,7 @@ payload]]></ee:set-payload>
 		</choice>
 	</flow>
 	<sub-flow name="email_notification_sub_Flow" doc:id="e8e3d2a4-a60f-480a-81c9-6005113dd2bf" >
-		<email:send doc:name="Send" doc:id="e5b63262-ab35-4b69-aad6-8767df458e95" toAddresses="#[p('smtp.to') splitBy &quot;,&quot;]" fromAddress="${secure::smtp.user}" subject="#[&quot;*** E-mail Notification: &quot; ++ p('app.env') ++ &quot; Kind Attention *** Error Alert in  &quot; ++ p('app.name')]" config-ref="Email_SMTP1">
+		<email:send doc:name="Send" doc:id="e5b63262-ab35-4b69-aad6-8767df458e95" toAddresses="#[p('smtp.to') splitBy &quot;,&quot;]" subject="#[&quot;*** E-mail Notification: &quot; ++ p('app.env') ++ &quot; Kind Attention *** Error Alert in  &quot; ++ p('app.name')]" config-ref="Email_SMTP1" fromAddress="${secure::smtp.user}">
 			<email:body contentType="text/html" encoding="UTF-8">
 				<email:content ><![CDATA[#[%dw 2.0
 output application/xml
@@ -178,7 +113,7 @@ skipNullOn="everywhere"
                             },
                           "tr":{
                                 "th": "Error Type",
-                                "td": if ( error.errorType.asString != null) error.errorType.asString else vars.error
+                                "td": error.errorType[0]
                             },
                           "tr":{
                                 "th": "Salesforce Id",
