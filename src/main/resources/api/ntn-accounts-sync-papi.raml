@@ -31,21 +31,6 @@ types:
       postRequestType: !include /dataTypes/request/post-account.raml
       postRequestExample: !include /examples/request/post-account.json
 
-/jde :
-  /accounts:
-    displayName: create account
-    description:  |
-      Resource to new account in salesforce.
-    post:
-      body:
-        application/json:
-          type: account-sf
-          example: !include /examples/request/post-accounts-sf-1.json
-      responses:
-            201:
-                  body:
-                        application/json:
-                              example: "success"
                                         
 
 
