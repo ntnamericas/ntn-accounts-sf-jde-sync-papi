@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.ntn</groupId>
 	<artifactId>ntn-accounts-sync-papi</artifactId>
-	<version>1.1.0-rc4</version>
+	<version>1.1.0-rc6</version>
 	<packaging>mule-application</packaging>
 	<name>ntn-accounts-sf-jde-sync-papi</name>
 	<properties>

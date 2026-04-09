@@ -5,23 +5,23 @@
 	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
-	<sub-flow name="jde-to-sf-account-flow" doc:id="63ca38cb-e52c-4212-aba0-d90f91ec3565" >
+	<!-- [STUDIO:"jde-to-sf-account-flow"]<sub-flow name="jde-to-sf-account-flow" doc:id="63ca38cb-e52c-4212-aba0-d90f91ec3565" >
 		<ee:transform doc:name="Set vars: requestPaths" doc:id="6e1096a9-9af3-4f53-9208-71dae158d189" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
 output application/json
----
-[payload.account]]]></ee:set-payload>
+&#45;&#45;-
+[payload.account&#93;&#93;&#93;></ee:set-payload>
 			</ee:message>
 			<ee:variables >
 				<ee:set-variable variableName="fileType" ><![CDATA[%dw 2.0
 output application/java
----
-"AccoutsData"]]></ee:set-variable>
+&#45;&#45;-
+"AccoutsData"&#93;&#93;></ee:set-variable>
 				<ee:set-variable variableName="sysRequest" ><![CDATA[%dw 2.0
 output application/java
----
-payload]]></ee:set-variable>
+&#45;&#45;-
+payload&#93;&#93;></ee:set-variable>
 			</ee:variables>
 		</ee:transform>
 		<ee:transform doc:name="Set vars: responseAccountDetails" doc:id="3358b240-1c3a-434e-81d4-bc4be4adc873">
@@ -30,8 +30,8 @@ payload]]></ee:set-variable>
 					<ee:variables>
 				<ee:set-variable variableName="accountDetails" ><![CDATA[%dw 2.0
 output application/json
----
-vars.sysRequest.accountDetails]]></ee:set-variable>
+&#45;&#45;-
+vars.sysRequest.accountDetails&#93;&#93;></ee:set-variable>
 					</ee:variables>
 				</ee:transform>
 		<ee:transform doc:name="Set vars: sfRequestforEachAccountList,  totalrecordCount" doc:id="5aa3a0b0-227c-420c-a565-072870914a75" >
@@ -47,29 +47,29 @@ var F4780 = vars.accountDetails.F4780
 var F03012 = vars.accountDetails.F03012
 var F0014 = vars.accountDetails.F0014
 var F57DOLCU = vars.accountDetails.F57DOLCU
-fun accountDetailsF0005(value,value1,value2) = ((F0005 filter (trim($.DRSY) == value1 and trim($.DRRT) == value2 and trim($.DRKY) == value) default [] map {
+fun accountDetailsF0005(value,value1,value2) = ((F0005 filter (trim($.DRSY) == value1 and trim($.DRRT) == value2 and trim($.DRKY) == value) default [&#93; map {
 	DRDL01: trim($.DRKY) ++ '-' ++ trim($.DRDL01)
 }).DRDL01) reduce ($)
-fun accountDetailssicDescF0005(value,value1,value2) = ((F0005 filter (trim($.DRSY) == value1 and trim($.DRRT) == value2 and trim($.DRKY) == value) default [] map {
+fun accountDetailssicDescF0005(value,value1,value2) = ((F0005 filter (trim($.DRSY) == value1 and trim($.DRRT) == value2 and trim($.DRKY) == value) default [&#93; map {
 	DRDL01: trim($.DRDL01)
 }).DRDL01) reduce ($)
-fun accountDetailsBillingF0005(value,value1,value2) = ((F0005 filter (trim($.DRSY) == value1 and trim($.DRRT) == value2 and trim($.DRKY) == value) default [] map {
+fun accountDetailsBillingF0005(value,value1,value2) = ((F0005 filter (trim($.DRSY) == value1 and trim($.DRRT) == value2 and trim($.DRKY) == value) default [&#93; map {
 	DRDL02: trim($.DRDL02)
 }).DRDL02) reduce ($)
-fun accountDetailsF0111(value,value1) = ((F0111 filter (trim($.WWAN8) == value and (trim($.WWIDLN as Number) == value1)) default [] map {
+fun accountDetailsF0111(value,value1) = ((F0111 filter (trim($.WWAN8) == value and (trim($.WWIDLN as Number) == value1)) default [&#93; map {
 	WWNLNM: trim($.WWNLNM)
 }).WWNLNM) reduce ($)
-fun accountDetailsWebsiteF0111(value,value1) = ((F0111 filter (trim($.WWAN8) == value and (trim($.WWIDLN as Number) == value1)) default [] map {
+fun accountDetailsWebsiteF0111(value,value1) = ((F0111 filter (trim($.WWAN8) == value and (trim($.WWIDLN as Number) == value1)) default [&#93; map {
 	WWAN8: trim($.WWAN8)
 }).WWAN8) reduce ($)
-fun accountDetailsF0115(value,value1)=((F0115 filter ($.WPAN8 == value and (trim($.WPPHTP) == value1)) default [] map {
+fun accountDetailsF0115(value,value1)=((F0115 filter ($.WPAN8 == value and (trim($.WPPHTP) == value1)) default [&#93; map {
 	WPAR1: '(' ++ trim($.WPAR1) ++ ')' ++ trim($.WPPH1)
 }).WPAR1) reduce ($)
-fun accountDetailsF01151(value,value1,value2)=((F01151 filter (($.EAAN8 ~= value) and (trim($.EAIDLN as Number) == value1) and (trim($.EAETP) == value2)) default [] map 
+fun accountDetailsF01151(value,value1,value2)=((F01151 filter (($.EAAN8 ~= value) and (trim($.EAIDLN as Number) == value1) and (trim($.EAETP) == value2)) default [&#93; map 
     {
 	EAEMAL: trim($.EAEMAL)
 }).EAEMAL) reduce ($)
-fun accountDetailsBillingAddressF0116(value,value1) = (F0116 filter (($.ALAN8 == value)) default [] map 
+fun accountDetailsBillingAddressF0116(value,value1) = (F0116 filter (($.ALAN8 == value)) default [&#93; map 
     {
 	Address: trim($.ALADD1) ++ ' ' ++ trim($.ALADD2) ++ ' ' ++ trim($.ALADD3) ++ ' ' ++ trim($.ALADD4),
 	City: trim($.ALCTY1) default '',
@@ -78,7 +78,7 @@ fun accountDetailsBillingAddressF0116(value,value1) = (F0116 filter (($.ALAN8 ==
 	CountryCode: if ( trim($.ALCTR) == '' and value1 == 'NBCC' ) 'CA' else if ( isBlank((accountDetailsBillingF0005(trim($.ALCTR),'77','CN'))) and value1 == 'NBCC' ) 'CA' else if ( !isBlank((accountDetailsBillingF0005(trim($.ALCTR),'77','CN'))) ) (accountDetailsBillingF0005(trim($.ALCTR),'77','CN')) else 'US',
 	ALEFTB: $.ALEFTB
 }) maxBy ($.ALEFTB)
-// fun accountDetailsShippingAddressF0116(value,value1) = (F0116 filter (($.ALAN8 == value)) default [] map 
+// fun accountDetailsShippingAddressF0116(value,value1) = (F0116 filter (($.ALAN8 == value)) default [&#93; map 
 //     {
 //        ShippingAddress : trim($.ALADD1) ++ ' ' ++ trim($.ALADD2) ++ ' ' ++ trim($.ALADD3)++ ' ' ++ trim($.ALADD4),
 //        ShippingCity : trim($.ALCTY1) default '',
@@ -87,13 +87,13 @@ fun accountDetailsBillingAddressF0116(value,value1) = (F0116 filter (($.ALAN8 ==
 //        ShippingCountryCode : if (trim($.ALCTR) == '' and value1 == 'NBCC') 'CA' else if (isBlank((accountDetailsBillingF0005(trim($.ALCTR),'77','CN'))) and value1 == 'NBCC') 'CA' else if (!isBlank((accountDetailsBillingF0005(trim($.ALCTR),'77','CN'))))  (accountDetailsBillingF0005(trim($.ALCTR),'77','CN')) else 'US',
 //         ALEFTB :  $.ALEFTB
 //     }) maxBy ($.ALEFTB)
-fun accountDetailsF4780(value,value1) = (F4780 filter ((trim($.AXAN8) ~= value) and trim($.AXXRTS) == value1) default [] map {
+fun accountDetailsF4780(value,value1) = (F4780 filter ((trim($.AXAN8) ~= value) and trim($.AXXRTS) == value1) default [&#93; map {
 	AXDC: $.AXDC
 }).AXDC reduce ($)
-fun accountDetailsbranchCodeF4780(value) = (F4780 filter ((trim($.AXAN8) ~= value)) default [] map {
+fun accountDetailsbranchCodeF4780(value) = (F4780 filter ((trim($.AXAN8) ~= value)) default [&#93; map {
 	AXEXRA: $.AXEXRA
 }).AXEXRA reduce ($)
-fun accountDetailsF03012(value) = (F03012 filter (trim($.AIAN8) ~= value) default [] map 
+fun accountDetailsF03012(value) = (F03012 filter (trim($.AIAN8) ~= value) default [&#93; map 
 {
 	AICRCD: trim($.AICRCD),
 	AIBADT: trim($.AIBADT),
@@ -111,28 +111,28 @@ fun accountDetailsF03012(value) = (F03012 filter (trim($.AIAN8) ~= value) defaul
 	AIAC05: trim($.AIAC05),
 	AITSTAD: trim($.AITSTAD)
 }) reduce ($)
-fun accountDetailsF0014(value) = ((F0014 filter (trim($.PNPTC) == value) default [] map {
+fun accountDetailsF0014(value) = ((F0014 filter (trim($.PNPTC) == value) default [&#93; map {
 	PNPTD: ($.PNPTC) ++ "-" ++ ($.PNPTD)
 }).PNPTD) reduce ($)
-fun accountDetailsownerF57DOLCU(value,value1)=((F57DOLCU filter ((trim($.CUAC04) == value) and (trim($.CUDEPT) == value1)) default [] map {
+fun accountDetailsownerF57DOLCU(value,value1)=((F57DOLCU filter ((trim($.CUAC04) == value) and (trim($.CUDEPT) == value1)) default [&#93; map {
 	CUALPH3: ($.CUALPH3)
 }).CUALPH3) reduce ($)
-fun accountDetailsCoordinatorF57DOLCU(value,value1)=((F57DOLCU filter ((trim($.CUAC06) == value) and (trim($.CUDEPT) == value1)) default [] map {
+fun accountDetailsCoordinatorF57DOLCU(value,value1)=((F57DOLCU filter ((trim($.CUAC06) == value) and (trim($.CUDEPT) == value1)) default [&#93; map {
 	CUALPH3: ($.CUALPH3)
 }).CUALPH3) reduce ($)
-fun accountDetailsEngineerF57DOLCU(value,value1)=((F57DOLCU filter ((trim($.CUAC36) == value) and (trim($.CUDEPT) == value1)) default [] map {
+fun accountDetailsEngineerF57DOLCU(value,value1)=((F57DOLCU filter ((trim($.CUAC36) == value) and (trim($.CUDEPT) == value1)) default [&#93; map {
 	CUALPH3: ($.CUALPH3)
 }).CUALPH3) reduce ($)
-fun accountDetailsAccMarkRepF57DOLCU(value,value1)=((F57DOLCU filter ((trim($.CUAC32) == value) and (trim($.CUDEPT) == value1)) default [] map {
+fun accountDetailsAccMarkRepF57DOLCU(value,value1)=((F57DOLCU filter ((trim($.CUAC32) == value) and (trim($.CUDEPT) == value1)) default [&#93; map {
 	CUALPH3: ($.CUALPH3)
 }).CUALPH3) reduce ($)
-fun julianDateToNormalDate(julianDate) = (((19 + (julianDate[0] as Number))* 100) + (julianDate[1 to 2] as Number) ++ julianDate[3 to 5]) as Date {
+fun julianDateToNormalDate(julianDate) = (((19 + (julianDate[0&#93; as Number))* 100) + (julianDate[1 to 2&#93; as Number) ++ julianDate[3 to 5&#93;) as Date {
 	format: "yyyyDDD"
 } as Date {
 	format:"yyyy-MM-dd"
 }
----
-(payload  default [] map {
+&#45;&#45;-
+(payload  default [&#93; map {
 	firstAddressNumber: $.ABAN81  default '',
 	secondAddressNumber: $.ABAN82  default '',
 	thridPartyBilling: $.ABAN83  default '',
@@ -209,43 +209,43 @@ dunBradStreetRating: if (!isBlank(accountDetailsF03012($.ABAN8).AIDB) and (accou
 	accountMarketingRep: accountDetailsAccMarkRepF57DOLCU((accountDetailsF03012($.ABAN8).AIAC05),'Mkt'),
 	"mktRep": if (!isBlank(accountDetailsF03012($.ABAN8).AIAC05) and (accountDetailsF03012($.ABAN8).AIAC05) != null) accountDetailsF0005((accountDetailsF03012($.ABAN8).AIAC05),'01','05') else '',
 	"ntnCompanyNumber": if ( $.ABSIC == 'NBCC' ) "00010" else "00001"
-})]]></ee:set-payload>
+})&#93;&#93;></ee:set-payload>
 			</ee:message>
 			<ee:variables >
 				<ee:set-variable variableName="totalrecordCount" ><![CDATA[%dw 2.0
 output application/json
----
-0]]></ee:set-variable>
+&#45;&#45;-
+0&#93;&#93;></ee:set-variable>
 				<ee:set-variable variableName="sfAccountResponse" ><![CDATA[%dw 2.0
 output application/json
----
-[]]]></ee:set-variable>
+&#45;&#45;-
+[&#93;&#93;&#93;></ee:set-variable>
 			</ee:variables>
 		</ee:transform>
 		<choice doc:name="Choice" doc:id="d5c9e820-cec8-4a73-867a-9eefdbdee6e5" >
-			<when expression="#[!isEmpty(payload)]">
+			<when expression="#[!isEmpty(payload)&#93;">
 				<ee:transform doc:name="set Vars : requestPaths,sfRequestAccountList" doc:id="dd38d3a7-fac7-4024-802c-d9b102f31b5a">
 					<ee:message>
 						<ee:set-payload><![CDATA[%dw 2.0
 output application/json
----
-payload[0]]]></ee:set-payload>
+&#45;&#45;-
+payload[0&#93;&#93;&#93;></ee:set-payload>
 					</ee:message>
 						<ee:variables>
 							<ee:set-variable variableName="recordCount"><![CDATA[%dw 2.0
 output application/json
----
-sizeOf(payload)]]></ee:set-variable>
+&#45;&#45;-
+sizeOf(payload)&#93;&#93;></ee:set-variable>
 							<ee:set-variable variableName="requestPaths"><![CDATA[%dw 2.0
 output application/java
----
+&#45;&#45;-
 {
 	"url" : p('sfdc-request.https.protocol') ++ ":" ++ "//" ++ p('sfdc-request.https.host') ++ ":" ++ p('sfdc-request.https.port') ++ p('sfdc-request.https.accounts'),
 	"method" : p('sfdc-request.https.accounts-method'),
 	"client_id": p('ntn-sfdc.clientId'),
 	"client_secret": p('secure::ntn-sfdc.clientSecret')
 	
-}]]></ee:set-variable>
+}&#93;&#93;></ee:set-variable>
 						</ee:variables>
 				</ee:transform>
 				<flow-ref doc:name="common-request-subflow" doc:id="186a43c0-d3ae-4f75-a5cc-8d1d8008f4ea" name="common-request-subflow" />
@@ -253,32 +253,32 @@ output application/java
 						<ee:message>
 							<ee:set-payload><![CDATA[%dw 2.0
 output application/json
----
-payload]]></ee:set-payload>
+&#45;&#45;-
+payload&#93;&#93;></ee:set-payload>
 						</ee:message>
 						<ee:variables>
 							<ee:set-variable variableName="totalrecordCount"><![CDATA[%dw 2.0
 output application/json
----
-vars.recordCount + vars.totalrecordCount]]></ee:set-variable>
+&#45;&#45;-
+vars.recordCount + vars.totalrecordCount&#93;&#93;></ee:set-variable>
 						<ee:set-variable variableName="sfAccountResponse" ><![CDATA[%dw 2.0
 output application/json
----
+&#45;&#45;-
 payload
 
-//vars.sfAccountResponse << payload]]></ee:set-variable>
+//vars.sfAccountResponse << payload&#93;&#93;></ee:set-variable>
 						</ee:variables>
 					</ee:transform>
 				<ee:transform doc:name="Final payload" doc:id="6e7acb33-37a2-45fd-ac3c-643c13f529dd" >
 					<ee:message >
 						<ee:set-payload ><![CDATA[%dw 2.0
 output application/json
----
+&#45;&#45;-
 {
 	"totalrecordCount" : vars.totalrecordCount,
 	"sfAccountResponse" : vars.sfAccountResponse
 }
-]]></ee:set-payload>
+&#93;&#93;></ee:set-payload>
 					</ee:message>
 				</ee:transform>
 			</when>
@@ -287,14 +287,14 @@ output application/json
 					<ee:message >
 						<ee:set-payload ><![CDATA[%dw 2.0
 output application/json
----
+&#45;&#45;-
 {
 	"Status" : "customer data not found in customerList"
-}]]></ee:set-payload>
+}&#93;&#93;></ee:set-payload>
 					</ee:message>
 				</ee:transform>
 			</otherwise>
 		</choice>
-		<logger level="INFO" doc:name="Final log message" doc:id="ce73c9c9-d3cd-4721-9b96-e379afd47022" message="Successfully created or updated the records in sfdc - #[flow.name] executions has completed-#[correlationId]-AccountData-#[now()]"/>
-	</sub-flow>
+		<logger level="INFO" doc:name="Final log message" doc:id="ce73c9c9-d3cd-4721-9b96-e379afd47022" message="Successfully created or updated the records in sfdc - #[flow.name&#93; executions has completed-#[correlationId&#93;-AccountData-#[now()&#93;"/>
+	</sub-flow> [STUDIO] -->
 </mule>

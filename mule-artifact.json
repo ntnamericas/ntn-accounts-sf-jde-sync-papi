@@ -1,4 +1,67 @@
 {
-    "minMuleVersion": "4.8.0",
-    "javaSpecificationVersions": ["17"]
+  "configs": [
+    "global.xml",
+    "common-service.xml",
+    "api.xml",
+    "sf-to-jde-account.xml",
+    "jde-to-sf-account.xml"
+  ],
+  "secureProperties": [],
+  "supportedJavaVersions": [],
+  "redeploymentEnabled": true,
+  "name": "com.ntn:ntn-accounts-sync-papi:1.1.0-rc5",
+  "minMuleVersion": "4.8.0",
+  "requiredProduct": "MULE_EE",
+  "classLoaderModelLoaderDescriptor": {
+    "id": "mule",
+    "attributes": {
+      "exportedPackages": [],
+      "exportedResources": [
+        "api/dataTypes/request/post-account-sf-1.raml",
+        "api/dataTypes/request/post-account-sf.raml",
+        "api/dataTypes/request/post-account.raml",
+        "api/dataTypes/response/health-status.raml",
+        "api/examples/200-generic-payload.raml",
+        "api/examples/200-health-payload.raml",
+        "api/examples/400-generic-payload.raml",
+        "api/examples/401-generic-payload.raml",
+        "api/examples/403-generic-payload.raml",
+        "api/examples/404-generic-payload.raml",
+        "api/examples/500-generic-payload.raml",
+        "api/examples/502-generic-payload.raml",
+        "api/examples/504-generic-payload.raml",
+        "api/examples/request/post-account.json",
+        "api/examples/request/post-accounts-sf-1.json",
+        "api/examples/request/post-accounts-sf.json",
+        "api/exchange.json",
+        "api/libraries/dataTypes.raml",
+        "api/libraries/resourceType.raml",
+        "api/libraries/securitySchemes.raml",
+        "api/ntn-accounts-sync-papi.raml",
+        "api/resourceTypes/create-only.raml",
+        "api/resourceTypes/read-only.raml",
+        "api.xml",
+        "application-types.xml",
+        "common-service.xml",
+        "dwl/dataToJDE.dwl",
+        "global.xml",
+        "jde-to-sf-account.xml",
+        "log4j2.xml",
+        "properties/common.yaml",
+        "properties/dev-properties.yaml",
+        "properties/dev-secure-properties.yaml",
+        "properties/local-properties.yaml",
+        "properties/local-secure-properties.yaml",
+        "properties/prod-properties.yaml",
+        "properties/prod-secure-properties.yaml",
+        "properties/uat-properties.yaml",
+        "properties/uat-secure-properties.yaml",
+        "sf-to-jde-account.xml"
+      ]
+    }
+  },
+  "bundleDescriptorLoader": {
+    "id": "mule",
+    "attributes": {}
+  }
 }
